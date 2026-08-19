@@ -26,4 +26,10 @@ v0의 기본 주행이 완료된 뒤 시작합니다. 이 버전에서는 전방
 
 실제 주행 속도와 제동 거리에 맞춰 실험 후 조정한다.
 
-`docs/`, `firmware/`, `hardware/` 폴더는 v1 구현을 시작할 때 추가합니다.
+`docs/`, `firmware/`, `hardware/` 폴더에 v1의 실습 자료를 모아 둡니다.
+
+## 실습 파일 순서
+
+1. `docs/libraries.md`를 따라 라이브러리를 설치한다.
+2. `firmware/01_distance_read`로 센서 단품을 확인한다.
+3. `firmware/02_safety_stop`으로 기본 주행에 안전 정지를 통합한다.

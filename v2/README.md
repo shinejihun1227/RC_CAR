@@ -28,4 +28,11 @@ v1의 안전 기능을 유지한 채, 손에 쥐는 별도 조종기에서 차�
 - 차량이 무선 명령에 따라 전진·후진·좌·우·정지한다.
 - 통신 끊김 시간 초과 시 차량 모터가 정지한다.
 
-`docs/`, `firmware/`, `hardware/` 폴더는 v2 구현을 시작할 때 추가합니다.
+`docs/`, `firmware/`, `hardware/` 폴더에 v2의 실습 자료를 모아 둡니다.
+
+## 실습 파일 순서
+
+1. `firmware/00_print_mac`을 차량·조종기 각각에 올려 MAC 주소를 기록한다.
+2. `firmware/01_joystick_read`로 조이스틱과 버튼 값을 확인한다.
+3. `02_espnow_sender_test`와 `03_espnow_receiver_test`로 무선 통신을 확인한다.
+4. MAC 주소를 입력한 `controller_joystick`과 `vehicle_receiver`를 올린다.
