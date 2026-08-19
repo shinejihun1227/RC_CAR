@@ -226,6 +226,28 @@ DC 모터 → 금속 감속기 → 3mm D축 출력축 → 바퀴
 | [BurgerBot N20 모터 홀더 STL](https://www.kevsrobots.com/projects/burgerbot/stl) | 분리형 모터 홀더와 캐스터 설계 참고 |
 | [ESP32 로봇 3D 프린팅 FreeCAD 자료](https://github.com/Robotisim/mobile_robotics_3D_printing) | FreeCAD 기반 샤시·ESP32 로봇 설계 참고 |
 
+### 조이스틱 조종기 케이스 참고 자료 (v2/v3)
+
+| 참고 자료 | 용도 |
+| --- | --- |
+| [Wallieonline ESP-NOW Remote Controller](https://www.wallieonline.nl/blogs/esp-now-remote-control-mini-robots.html) | ESP32 Dev board + 아날로그 조이스틱 + ESP-NOW 조종기 구성 참고 |
+| [Wallieonline 조종기 케이스 MakerWorld 파일](https://makerworld.com/en/models/695669#profileId-624636) | 현재 v2와 가장 가까운 조이스틱 하우징 STL 참고 |
+| [Wallieonline 조종기 펌웨어](https://github.com/wallieonline/worc-remote-controller-esp32) | 조이스틱 입력을 ESP-NOW로 보내는 코드 구조 참고 |
+| [GripCtrl](https://github.com/adrianr3/gripctrl) | ESP32 DevKitC, 조이스틱 2개, 버튼·OLED를 갖춘 확장형 조종기 CAD·회로 참고 |
+| [Micro Remote Control](https://www.instructables.com/Micro-Remote-Control/) | 조이스틱 1개와 버튼을 쓰는 소형 3D 프린팅 조종기 참고 |
+| [NeoGrip](https://github.com/AthemiS13/NeoGrip) | ESP32·KY-023 조이스틱·버튼을 넣는 인체공학적 손잡이와 STEP 파일 참고 |
+
+현재 RC_CAR에는 **Wallieonline 조종기 케이스를 가장 먼저 참고**합니다. 단, STL을 바로 출력하지 말고 ESP32 DevKit V1, KY-023 조이스틱, 정지·속도 버튼의 실제 길이·폭·높이와 USB 포트 위치를 비교합니다.
+
+```text
+controller-case/
+├─ top-cover       조이스틱 구멍, 정지·속도 버튼, USB 포트 구멍
+├─ inner-deck      ESP32 DevKit V1, KY-023, 버튼 2개 고정
+└─ bottom-case     M3 히트셋 인서트와 나사 체결부
+```
+
+조종기는 기본 구성에서 USB 케이블 또는 USB 보조배터리로 전원을 공급합니다. 리튬 셀·충전회로는 현재 기본 구조에 포함하지 않습니다.
+
 다운로드·직접 설계한 3D 파일은 아래처럼 보관합니다.
 
 ```text
