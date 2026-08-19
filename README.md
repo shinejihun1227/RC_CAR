@@ -24,6 +24,8 @@ ESP32로 만드는 2WD Wi-Fi RC카 프로젝트입니다. 이 저장소는 버�
 - [Arduino IDE 설정](docs/ARDUINO_SETUP.md)
 - [공통 라이브러리 안내](library/README.md)
 - [버전별 구매 정보](market/README.md)
+- [프로젝트 통합 가이드](docs/PROJECT_GUIDE.md)
+- [3D 하드웨어 파일 보관소](hardware/README.md)
 
 ```text
 v0/  기본 RC카를 완성하는 독립 프로젝트
