@@ -19,5 +19,6 @@ AliExpress 판매 상품은 판매자·재고·규격이 자주 바뀌므로, �
 | v1 | [v1.md](v1.md) | 전방 거리 감지와 안전 정지 |
 | v2 | [v2.md](v2.md) | ESP-NOW 조이스틱 조종기 |
 | v3 | [v3.md](v3.md) | BMI270 핸드 제스처 조종 |
+| v4 | [v4.md](v4.md) | 엔코더 N20 4륜 속도 제어 |
 
 전체 중복 제거 부품표는 [docs/BOM_TOTAL.md](../docs/BOM_TOTAL.md)에서 확인합니다.
