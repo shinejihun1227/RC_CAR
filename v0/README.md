@@ -11,10 +11,11 @@
 ## 진행 순서
 
 1. [요구사항](docs/requirements.md), [블록 다이어그램](docs/block-diagram.md), [부품표](docs/bom.md)를 읽는다.
-2. [배선표](docs/wiring.md)대로 연결한다.
-3. `firmware/01_motor_test`로 양쪽 모터 방향을 확인한다.
-4. `firmware/02_basic_drive`를 업로드하고 시리얼 모니터에서 `f`, `b`, `l`, `r`, `s` 명령을 보낸다.
-5. 실습 결과를 Commit으로 남긴다.
+2. [v0 구매 목록](../market/v0.md)의 규격을 확인하고 부품을 구매한다.
+3. [배선표](docs/wiring.md)대로 연결한다.
+4. `firmware/01_motor_test`로 양쪽 모터 방향을 확인한다.
+5. `firmware/02_basic_drive`를 업로드하고 시리얼 모니터에서 `f`, `b`, `l`, `r`, `s` 명령을 보낸다.
+6. 실습 결과를 Commit으로 남긴다.
 
 Arduino IDE와 ESP32 보드 설정은 [공통 라이브러리 폴더](../library/README.md)의 [ESP32 보드 패키지 문서](../library/esp32-board-package.md)를 먼저 확인합니다.
 
