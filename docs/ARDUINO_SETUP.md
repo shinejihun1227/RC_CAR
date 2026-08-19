@@ -7,14 +7,14 @@
 3. 업로드 전에는 모터 전원을 끄고 ESP32 USB만 연결한다.
 4. 시리얼 모니터는 115200 baud로 연다.
 
-## 추가 라이브러리
+## 라이브러리 안내
 
-| 버전 | 라이브러리 | 용도 |
-| --- | --- | --- |
-| v1, v2 차량 | `VL53L1X` by Pololu | ToF 거리 측정 |
-| v3 조종기 | `SparkFun BMI270 Arduino Library` | BMI270 I2C 읽기 |
+라이브러리 설치와 버전별 사용 위치는 루트의 [library](../library/README.md) 폴더에서 관리합니다.
 
-ESP-NOW와 WiFi는 ESP32 보드 패키지에 포함되어 별도 설치가 필요 없다.
+- [ESP32 보드 패키지](../library/esp32-board-package.md)
+- [VL53L1X by Pololu](../library/vl53l1x-pololu.md)
+- [ESP-NOW](../library/esp-now.md)
+- [SparkFun BMI270 Arduino Library](../library/bmi270-sparkfun.md)
 
 ## 업로드 순서
 

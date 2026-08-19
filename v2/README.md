@@ -30,6 +30,8 @@ v1의 안전 기능을 유지한 채, 손에 쥐는 별도 조종기에서 차�
 
 `docs/`, `firmware/`, `hardware/` 폴더에 v2의 실습 자료를 모아 둡니다.
 
+ESP-NOW 설정과 ESP32 보드 패키지는 [공통 라이브러리 폴더](../library/README.md)의 [ESP-NOW 문서](../library/esp-now.md)에서 확인합니다.
+
 ## 실습 파일 순서
 
 1. `firmware/00_print_mac`을 차량·조종기 각각에 올려 MAC 주소를 기록한다.

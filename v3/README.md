@@ -39,7 +39,7 @@ v2의 조종기 ESP32에 BMI270을 추가하는 구조이므로, 세 번째 ESP3
 
 ## 실습 파일 순서
 
-1. `docs/libraries.md`를 따라 BMI270 라이브러리를 설치한다.
+1. [공통 라이브러리 폴더](../library/README.md)에서 [BMI270 설치 문서](../library/bmi270-sparkfun.md)를 따라 설치한다.
 2. `firmware/00_bmi270_read`로 가속도·자이로 값을 확인한다.
 3. `firmware/01_gesture_map_test`로 손 동작과 명령의 관계를 확인한다.
 4. `firmware/controller_bmi270`으로 v2 조종기 입력을 제스처 입력으로 교체한다.

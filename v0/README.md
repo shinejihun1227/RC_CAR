@@ -16,6 +16,8 @@
 4. `firmware/02_basic_drive`를 업로드하고 시리얼 모니터에서 `f`, `b`, `l`, `r`, `s` 명령을 보낸다.
 5. 실습 결과를 Commit으로 남긴다.
 
+Arduino IDE와 ESP32 보드 설정은 [공통 라이브러리 폴더](../library/README.md)의 [ESP32 보드 패키지 문서](../library/esp32-board-package.md)를 먼저 확인합니다.
+
 ## 폴더 구조
 
 ```text
