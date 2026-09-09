@@ -1,11 +1,10 @@
 # v2 조종기 배선
 
-| 조종기 부품 | 조종기 ESP32 | 설명 |
-| --- | --- | --- |
-| 조이스틱 VRx | GPIO 34 | 조향 ADC 입력 |
-| 조이스틱 VRy | GPIO 35 | 전후진 ADC 입력 |
-| 조이스틱 VCC/GND | 3.3 V/GND | 3.3 V 기준 사용 |
-| 정지 버튼 | GPIO 4 | 내부 풀업, 버튼 반대쪽은 GND |
-| 속도 버튼 | GPIO 5 | 내부 풀업, 버튼 반대쪽은 GND |
+| 부품 핀 | 조종기 ESP32 | 설명 |
+|---|---|---|
+| 조이스틱 VRx | GPIO 34 | 조향 ADC |
+| 조이스틱 VRy | GPIO 35 | 전후진 ADC |
+| 조이스틱 VCC/GND | 3.3V/GND | ADC 입력이 3.3V를 넘지 않도록 연결 |
+| 정지 버튼 | GPIO 4와 GND | INPUT_PULLUP, 눌림 LOW |
 
-차량 ESP32의 모터·VL53L1X 배선은 v1을 유지한다.
+차량은 [v0 모터 배선](../../v0/docs/wiring.md)과 [v1 센서 배선](../../v1/docs/wiring.md)을 유지한다. 조종기의 GPIO 34/35와 v4 차량의 엔코더 GPIO 34/35는 서로 다른 ESP32의 핀이다.

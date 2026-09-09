@@ -1,47 +1,37 @@
-# v3 — BMI270 핸드 제스처 RC카
+# v3 · BMI270 손 제스처 조종
 
-v2의 무선 조종기에서 조이스틱 입력을 BMI270 IMU의 기울기와 동작으로 확장합니다.
+손 조종기의 기울기를 전진·후진·조향 명령으로 변환한다.
 
-## 보드 구성
+## 배우는 코딩
 
-```text
-손 조종기 ESP32 + BMI270
-              │
-          ESP-NOW
-              │
-차량 ESP32 + TB6612FNG + 거리 센서
-```
+단품 실습에서는 가속도와 자이로를 모두 읽는다. 현재 조종기의 Roll/Pitch 계산은 가속도에 atan2·sqrt를 적용한다. 부팅 시 100회 평균으로 중립을 보정하고, 8° 미만 데드존과 35° 최대 명령 범위를 적용한다. 자이로 융합·절대 Yaw 제어는 기본 구현에 없다.
 
-v2의 조종기 ESP32에 BMI270을 추가하는 구조이므로, 세 번째 ESP32는 필요하지 않습니다.
+## 하드웨어와 부품
 
-구매할 BMI270 부품과 검색어는 [v3 구매 목록](../market/v3.md)에서 확인합니다.
+v2의 조종기 ESP32를 재사용하고 BMI270 1개를 추가한다. SDA/SCL은 GPIO 21/22, 정지 버튼은 GPIO 4다. ESP32를 세 번째로 추가하지 않는다.
 
-## 제스처 예시
+[배선표](docs/wiring.md) · [단계별 부품표](docs/bom.md) · [구매 규격](../parts/purchasing/v3.md) · [부품 원리](../parts/PRINCIPLES.md)
 
-| 손 동작 | 조종 명령 |
-| --- | --- |
-| 앞으로 기울임 | 전진 |
-| 뒤로 기울임 | 후진 |
-| 왼쪽 기울임 | 좌회전 |
-| 오른쪽 기울임 | 우회전 |
-| 정지 버튼 또는 중립 자세 | 정지 |
+## 실습 순서
 
-## 구현 원칙
+[설치 안내](../course/setup/README.md)를 확인하고 표의 순서대로 각 스케치를 별도로 업로드한다.
 
-- BMI270의 가속도계·자이로스코프를 이용해 Roll·Pitch 변화량을 읽는다.
-- 초기 중립 자세를 기준값으로 저장하고, 데드존을 둬서 손떨림을 무시한다.
-- Yaw는 6축 IMU만으로는 누적 드리프트가 있으므로, 절대 방향 제스처 기준으로 사용하지 않는다.
-- v2의 통신 끊김 자동 정지와 v1의 거리 안전 정지를 그대로 유지한다.
+| 스케치 | 실습 내용 |
+|---|---|
+| [00_bmi270_read](firmware/00_bmi270_read/00_bmi270_read.ino) | 가속도 g·각속도 dps 출력 |
+| [01_gesture_map_test](firmware/01_gesture_map_test/01_gesture_map_test.ino) | Roll/Pitch와 STOP/FORWARD/BACKWARD/LEFT/RIGHT 비교 |
+| [controller_bmi270](firmware/controller_bmi270/controller_bmi270.ino) | 중립 보정 후 기울기를 ESP-NOW 명령으로 송신 |
 
-## 완료 기준
+차량에는 [v2 vehicle_receiver](../v2/firmware/vehicle_receiver/vehicle_receiver.ino)를 업로드한다. [제스처 맵](docs/gesture-map.md)에서 단품 판정과 통합 조종기의 차이를 확인한다.
 
-- 중립 자세에서 RC카가 정지한다.
-- 기울기 크기에 따라 속도 또는 조향 강도가 변한다.
-- 제스처 통신이 끊기면 차량이 자동 정지한다.
+## 확인할 결과
 
-## 실습 파일 순서
+부팅 중 조종기를 고정하고, 중립·기울기·정지 버튼·통신 끊김을 시험한다. 센서 장착 방향에 따라 각도 부호를 실제 동작과 비교한다.
 
-1. [공통 라이브러리 폴더](../library/README.md)에서 [BMI270 설치 문서](../library/bmi270-sparkfun.md)를 따라 설치한다.
-2. `firmware/00_bmi270_read`로 가속도·자이로 값을 확인한다.
-3. `firmware/01_gesture_map_test`로 손 동작과 명령의 관계를 확인한다.
-4. `firmware/controller_bmi270`으로 v2 조종기 입력을 제스처 입력으로 교체한다.
+[요구사항](docs/requirements.md) · [시험 절차](docs/test-plan.md) · [장비 설정](../course/CONFIGURATION.md) · [실습 기록](../course/LAB_RECORD.md)
+
+## 다음 단계
+
+v4에서 차량을 엔코더 N20 4륜 구동으로 교체한다.
+
+[전체 학습 흐름](../course/README.md)

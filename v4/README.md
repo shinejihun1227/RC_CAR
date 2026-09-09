@@ -1,31 +1,37 @@
-# v4 — 엔코더 N20 4륜 속도 제어 RC카
+# v4 · 엔코더 N20 4륜 PID 제어
 
-v3의 무선 제어와 거리 안전 정지를 유지하면서, 네 개의 엔코더 N20 모터를 각각 측정하고 PID로 속도를 보정합니다.
+네 모터의 회전 속도를 각각 측정하고 목표 RPM과의 차이를 PWM으로 보정한다.
 
-## 보드 구성
+## 배우는 코딩
 
-```text
-조종기 ESP32 (v2 조이스틱 또는 v3 BMI270)
-                 │ ESP-NOW
-차량 ESP32 + VL53L1X + TB6612FNG 2개 + 엔코더 N20 모터 4개
-```
+인터럽트에서 CHA 상승 에지를 센다. 임계 구역으로 카운터를 복사하고 펄스 수·측정 시간·PPR로 RPM을 계산한다. 배열과 반복문으로 모터 네 개를 처리하며 P/I/D와 trim으로 출력을 보정한다. 엔코더는 CHA만 읽으므로 회전 방향을 직접 측정하지 않는다.
 
-## 목표
+## 하드웨어와 부품
 
-- 모터마다 엔코더 펄스를 읽어 실제 회전 속도를 계산한다.
-- 같은 목표 속도에서 느린 모터는 PWM을 높이고 빠른 모터는 낮춘다.
-- 네 모터의 PWM 보정값과 PID 계수를 조절해 직진 편차를 줄인다.
-- v1 거리 안전 정지와 v2 통신 끊김 정지를 유지한다.
+엔코더 N20 4개, TB6612FNG 총 2개, 바퀴·브래킷 각 4개. VL53L1X와 조종기는 재사용한다. v0 핀맵을 그대로 쓰지 않는다. GPIO 34/35/36/39는 엔코더 입력이며 필요한 경우 외부 풀업을 사용한다.
 
-## 실습 파일 순서
+[배선표](docs/wiring.md) · [단계별 부품표](docs/bom.md) · [구매 규격](../parts/purchasing/v4.md) · [부품 원리](../parts/PRINCIPLES.md)
 
-1. [v4 구매 목록](../market/v4.md)과 [배선표](docs/wiring.md)를 확인한다.
-2. `firmware/00_encoder_read`로 네 엔코더의 펄스 방향·속도를 확인한다.
-3. `firmware/01_speed_pid_tune`으로 정지 상태에서 바퀴를 띄운 뒤 PID를 튜닝한다.
-4. `firmware/vehicle_encoder_receiver`를 업로드하고 v2 또는 v3 조종기를 연결한다.
+## 실습 순서
 
-## 주의
+[설치 안내](../course/setup/README.md)를 확인하고 표의 순서대로 각 스케치를 별도로 업로드한다.
 
-- 엔코더 N20의 출력 축 1회전당 펄스 수(PPR)는 판매 옵션별로 다릅니다. 코드의 `PULSES_PER_WHEEL_REV`를 실측값으로 변경해야 RPM이 정확합니다.
-- 엔코더 신호는 ESP32 GPIO에 **3.3 V를 넘겨 입력하면 안 됩니다.** 5 V 전용 엔코더는 레벨 시프터를 사용하거나 3.3 V 호환 제품을 선택합니다.
-- 모터 4개는 TB6612FNG 두 개의 채널에 각각 하나씩 연결합니다. 모터를 한 채널에 병렬로 연결하지 않습니다.
+| 스케치 | 실습 내용 |
+|---|---|
+| [00_encoder_read](firmware/00_encoder_read/00_encoder_read.ino) | 바퀴별 펄스·RPM, 출력축 PPR 실측 |
+| [01_speed_pid_tune](firmware/01_speed_pid_tune/01_speed_pid_tune.ino) | f/b/s와 +/-로 목표 RPM·PID 시험 |
+| [vehicle_encoder_receiver](firmware/vehicle_encoder_receiver/vehicle_encoder_receiver.ino) | v2 또는 v3 조종기·전진 거리 정지·4륜 PID 통합 |
+
+[PID 튜닝 순서](docs/pid-tuning.md)를 따르고, 튜닝 코드에서 확인한 PPR·PID·trim 값을 통합 수신기에도 반영한다.
+
+## 확인할 결과
+
+세 스케치의 PPR 기본값 1.0을 실측값으로 바꾼다. 바퀴를 띄워 방향·RPM을 확인하고 저속 직진 편차를 비교한다. PID·trim 기본값은 실물 튜닝 완료값이 아니다.
+
+[요구사항](docs/requirements.md) · [시험 절차](docs/test-plan.md) · [장비 설정](../course/CONFIGURATION.md) · [실습 기록](../course/LAB_RECORD.md)
+
+## 다음 단계
+
+CHB 방향 측정, 속도 기록, 주행 편차 분석을 선택 확장으로 진행한다.
+
+[전체 학습 흐름](../course/README.md)

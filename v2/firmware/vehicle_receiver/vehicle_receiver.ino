@@ -9,16 +9,44 @@ constexpr int BIN1 = 32, BIN2 = 33, PWMB = 13;
 constexpr uint16_t STOP_MM = 200;
 VL53L1X tof;
 struct ControlPacket { int16_t throttle, steering; bool emergencyStop; uint32_t sequence; };
-volatile ControlPacket latest{}; volatile unsigned long lastReceiveMs = 0;
+ControlPacket latest{};
+unsigned long lastReceiveMs = 0;
+portMUX_TYPE dataMux = portMUX_INITIALIZER_UNLOCKED;
 void motor(int a, int b, int pwmPin, int value) {
   digitalWrite(a, value > 0 ? HIGH : LOW);
   digitalWrite(b, value < 0 ? HIGH : LOW);
   analogWrite(pwmPin, constrain(abs(value), 0, 255));
 }
 void drive(int left, int right) { motor(AIN1, AIN2, PWMA, left); motor(BIN1, BIN2, PWMB, right); }
-bool obstacleTooClose() { const uint16_t mm = tof.read(); return tof.timeoutOccurred() || mm < STOP_MM; }
+// 새 측정이 준비됐을 때만 읽어 정지 명령·통신 시간 확인을 계속한다.
+constexpr unsigned long SENSOR_MAX_AGE_MS = 250;
+uint16_t distanceMm = 0;
+bool distanceValid = false;
+unsigned long distanceReadMs = 0;
+
+void updateDistance() {
+  if (!tof.dataReady()) return;
+  distanceMm = tof.read(false);
+  distanceValid = !tof.timeoutOccurred() && tof.last_status == 0 &&
+                  tof.ranging_data.range_status == VL53L1X::RangeValid;
+  distanceReadMs = millis();
+}
+
+bool obstacleTooClose() {
+  return !distanceValid || millis() - distanceReadMs > SENSOR_MAX_AGE_MS ||
+         distanceMm <= STOP_MM;
+}
+
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
 void onReceive(const esp_now_recv_info_t*, const uint8_t* data, int len) {
-  if (len == sizeof(ControlPacket)) { memcpy((void*)&latest, data, sizeof(latest)); lastReceiveMs = millis(); }
+#else
+void onReceive(const uint8_t*, const uint8_t* data, int len) {
+#endif
+  if (len != sizeof(ControlPacket)) return;
+  portENTER_CRITICAL(&dataMux);
+  memcpy(&latest, data, sizeof(latest));
+  lastReceiveMs = millis();
+  portEXIT_CRITICAL(&dataMux);
 }
 void setup() {
   for (int p : {STBY, AIN1, AIN2, PWMA, BIN1, BIN2, PWMB}) pinMode(p, OUTPUT);
@@ -29,9 +57,14 @@ void setup() {
   WiFi.mode(WIFI_STA); esp_now_init(); esp_now_register_recv_cb(onReceive);
 }
 void loop() {
-  if (millis() - lastReceiveMs > 300 || latest.emergencyStop) { drive(0, 0); return; }
-  if (latest.throttle > 0 && obstacleTooClose()) { drive(0, 0); return; }
-  const int left = constrain(latest.throttle + latest.steering, -255, 255);
-  const int right = constrain(latest.throttle - latest.steering, -255, 255);
+  updateDistance();
+  ControlPacket packet; unsigned long receivedAt;
+  portENTER_CRITICAL(&dataMux);
+  packet = latest; receivedAt = lastReceiveMs;
+  portEXIT_CRITICAL(&dataMux);
+  if (millis() - receivedAt > 300 || packet.emergencyStop) { drive(0, 0); return; }
+  if (packet.throttle > 0 && obstacleTooClose()) { drive(0, 0); return; }
+  const int left = constrain(packet.throttle + packet.steering, -255, 255);
+  const int right = constrain(packet.throttle - packet.steering, -255, 255);
   drive(left, right);
 }

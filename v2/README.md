@@ -1,42 +1,38 @@
-# v2 — 조이스틱·버튼 무선 조종기
+# v2 · 조이스틱 무선 조종
 
-v1의 안전 기능을 유지한 채, 손에 쥐는 별도 조종기에서 차량으로 주행 명령을 보냅니다.
+별도 ESP32 조종기에서 차량으로 주행 명령을 전송한다.
 
-## 보드 구성
+## 배우는 코딩
 
-```text
-조종기 ESP32 + 조이스틱 + 버튼들
-              │
-          ESP-NOW
-              │
-차량 ESP32 + TB6612FNG + 거리 센서
-```
+ADC 값 0~4095를 전후진·조향 명령 -255~255로 변환한다. 데드존으로 중립 흔들림을 줄인다. struct에 명령을 묶어 ESP-NOW로 보내고, 수신 콜백과 loop 사이에서 최근 명령을 공유한다. 수신 시간 초과를 millis로 판단한다.
 
-이 버전부터 ESP32가 2개 필요합니다. 하나는 차량 제어용, 하나는 조종기용입니다.
+## 하드웨어와 부품
 
-구매할 조종기 부품과 검색어는 [v2 구매 목록](../market/v2.md)에서 확인합니다.
+차량과 조종기에 ESP32 각 1개. 조이스틱 VRx/VRy는 조종기 GPIO 34/35, 정지 버튼은 GPIO 4. 기본 코드에는 별도 속도 모드 버튼이 없다.
 
-## 목표
+[배선표](docs/wiring.md) · [단계별 부품표](docs/bom.md) · [구매 규격](../parts/purchasing/v2.md) · [부품 원리](../parts/PRINCIPLES.md)
 
-- 조이스틱 Y축으로 전진·후진과 속도를 제어한다.
-- 조이스틱 X축으로 좌·우 조향을 제어한다.
-- 버튼으로 정지, 속도 모드, 안전 해제를 제어한다.
-- ESP-NOW로 조종 명령을 차량 ESP32에 전송한다.
-- 일정 시간 명령을 받지 못하면 차량은 자동 정지한다.
+## 실습 순서
 
-## 완료 기준
+[설치 안내](../course/setup/README.md)를 확인하고 표의 순서대로 각 스케치를 별도로 업로드한다.
 
-- 조이스틱과 버튼 값을 조종기 시리얼 모니터에서 확인한다.
-- 차량이 무선 명령에 따라 전진·후진·좌·우·정지한다.
-- 통신 끊김 시간 초과 시 차량 모터가 정지한다.
+| 스케치 | 실습 내용 |
+|---|---|
+| [00_print_mac](firmware/00_print_mac/00_print_mac.ino) | 각 ESP32의 STA MAC 주소 확인 |
+| [01_joystick_read](firmware/01_joystick_read/01_joystick_read.ino) | 조이스틱 중심·방향과 정지 버튼 확인 |
+| [02_espnow_sender_test](firmware/02_espnow_sender_test/02_espnow_sender_test.ino) | 차량 MAC을 입력하고 시험 패킷 송신 |
+| [03_espnow_receiver_test](firmware/03_espnow_receiver_test/03_espnow_receiver_test.ino) | 시험 패킷 수신·출력 |
+| [controller_joystick](firmware/controller_joystick/controller_joystick.ino) | ADC를 주행 패킷으로 변환·송신 |
+| [vehicle_receiver](firmware/vehicle_receiver/vehicle_receiver.ino) | 무선 명령·전진 거리 조건·수신 시간 초과를 결합 |
 
-`docs/`, `firmware/`, `hardware/` 폴더에 v2의 실습 자료를 모아 둡니다.
+## 확인할 결과
 
-ESP-NOW 설정과 ESP32 보드 패키지는 [공통 라이브러리 폴더](../library/README.md)의 [ESP-NOW 문서](../library/esp-now.md)에서 확인합니다.
+정지 버튼과 수신 중단 300ms 조건에서 정지하는지 측정한다. 전방 거리 조건은 전진보다 우선하며 후진·제자리 회전은 허용한다.
 
-## 실습 파일 순서
+[요구사항](docs/requirements.md) · [시험 절차](docs/test-plan.md) · [장비 설정](../course/CONFIGURATION.md) · [실습 기록](../course/LAB_RECORD.md)
 
-1. `firmware/00_print_mac`을 차량·조종기 각각에 올려 MAC 주소를 기록한다.
-2. `firmware/01_joystick_read`로 조이스틱과 버튼 값을 확인한다.
-3. `02_espnow_sender_test`와 `03_espnow_receiver_test`로 무선 통신을 확인한다.
-4. MAC 주소를 입력한 `controller_joystick`과 `vehicle_receiver`를 올린다.
+## 다음 단계
+
+v3에서 같은 명령 패킷에 BMI270 기울기 입력을 연결한다.
+
+[전체 학습 흐름](../course/README.md)

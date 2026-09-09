@@ -1,28 +1,34 @@
-# v0 — 기본 RC카
+# v0 · 기본 모터 주행
 
-이 버전의 목표는 센서 없이 RC카를 안정적으로 움직이는 것입니다.
+ESP32가 좌우 모터의 방향과 속도를 제어하고 시리얼 명령으로 차를 움직인다.
 
-## 완료 기준
+## 배우는 코딩
 
-- ESP32가 TB6612FNG를 제어한다.
-- 좌·우 DC 기어드모터로 전진, 후진, 좌회전, 우회전, 정지한다.
-- 전원을 켰을 때 모터가 임의로 움직이지 않는다.
+상수로 핀과 속도를 정의한다. 함수를 이용해 모터 한 개의 동작을 묶고, if 조건문으로 명령을 해석한다. GPIO 디지털 출력은 방향을, PWM은 구동 세기를 결정한다.
 
-## 진행 순서
+## 하드웨어와 부품
 
-1. [요구사항](docs/requirements.md), [블록 다이어그램](docs/block-diagram.md), [부품표](docs/bom.md)를 읽는다.
-2. [v0 구매 목록](../market/v0.md)의 규격을 확인하고 부품을 구매한다.
-3. [배선표](docs/wiring.md)대로 연결한다.
-4. `firmware/01_motor_test`로 양쪽 모터 방향을 확인한다.
-5. `firmware/02_basic_drive`를 업로드하고 시리얼 모니터에서 `f`, `b`, `l`, `r`, `s` 명령을 보낸다.
-6. 실습 결과를 Commit으로 남긴다.
+ESP32 1개, TB6612FNG 1개, TT 모터·바퀴 각 2개, AA 4개, 5V 벅-부스트. 모터는 ESP32 GPIO가 아닌 드라이버 출력에 연결한다.
 
-Arduino IDE와 ESP32 보드 설정은 [공통 라이브러리 폴더](../library/README.md)의 [ESP32 보드 패키지 문서](../library/esp32-board-package.md)를 먼저 확인합니다.
+[배선표](docs/wiring.md) · [단계별 부품표](docs/bom.md) · [구매 규격](../parts/purchasing/v0.md) · [부품 원리](../parts/PRINCIPLES.md)
 
-## 폴더 구조
+## 실습 순서
 
-```text
-docs/       v0 요구사항, 부품, 배선, 조사 기록
-firmware/   v0 ESP32 스케치
-hardware/   v0 회로 이미지와 실물 사진
-```
+[설치 안내](../course/setup/README.md)를 확인하고 표의 순서대로 각 스케치를 별도로 업로드한다.
+
+| 스케치 | 실습 내용 |
+|---|---|
+| [01_motor_test](firmware/01_motor_test/01_motor_test.ino) | 좌우 모터를 순서대로 구동해 방향 확인 |
+| [02_basic_drive](firmware/02_basic_drive/02_basic_drive.ino) | f/b/l/r/s 시리얼 명령으로 전후진·회전·정지 |
+
+## 확인할 결과
+
+전원 투입 때 임의로 움직이지 않고 다섯 명령이 의도대로 동작하는지 확인한다.
+
+[요구사항](docs/requirements.md) · [시험 절차](docs/test-plan.md) · [장비 설정](../course/CONFIGURATION.md) · [실습 기록](../course/LAB_RECORD.md)
+
+## 다음 단계
+
+v1에서 차량 앞의 거리를 읽고 전진 허용 여부를 판단한다.
+
+[전체 학습 흐름](../course/README.md)

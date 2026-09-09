@@ -66,8 +66,30 @@ void updatePid() {
     previousError[i] = error;
   }
 }
-bool obstacleTooClose() { const uint16_t mm = tof.read(); return tof.timeoutOccurred() || mm < STOP_MM; }
+// 새 측정이 준비됐을 때만 읽어 정지 명령·통신 시간 확인을 계속한다.
+constexpr unsigned long SENSOR_MAX_AGE_MS = 250;
+uint16_t distanceMm = 0;
+bool distanceValid = false;
+unsigned long distanceReadMs = 0;
+
+void updateDistance() {
+  if (!tof.dataReady()) return;
+  distanceMm = tof.read(false);
+  distanceValid = !tof.timeoutOccurred() && tof.last_status == 0 &&
+                  tof.ranging_data.range_status == VL53L1X::RangeValid;
+  distanceReadMs = millis();
+}
+
+bool obstacleTooClose() {
+  return !distanceValid || millis() - distanceReadMs > SENSOR_MAX_AGE_MS ||
+         distanceMm <= STOP_MM;
+}
+
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
 void onReceive(const esp_now_recv_info_t*, const uint8_t* data, int len) {
+#else
+void onReceive(const uint8_t*, const uint8_t* data, int len) {
+#endif
   if (len != sizeof(ControlPacket)) return;
   portENTER_CRITICAL(&dataMux); memcpy(&latest, data, sizeof(latest)); lastReceiveMs = millis(); portEXIT_CRITICAL(&dataMux);
 }
@@ -82,6 +104,7 @@ void setup() {
   WiFi.mode(WIFI_STA); esp_now_init(); esp_now_register_recv_cb(onReceive);
 }
 void loop() {
+  updateDistance();
   ControlPacket packet; unsigned long receivedAt;
   portENTER_CRITICAL(&dataMux); packet = latest; receivedAt = lastReceiveMs; portEXIT_CRITICAL(&dataMux);
   if (millis() - receivedAt > 300 || packet.emergencyStop) { stopAll(); return; }

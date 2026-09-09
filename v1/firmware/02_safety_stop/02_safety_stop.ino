@@ -14,12 +14,27 @@ void motor(int a, int b, int pwmPin, int value) {
   analogWrite(pwmPin, constrain(abs(value), 0, 255));
 }
 void drive(int left, int right) { motor(AIN1, AIN2, PWMA, left); motor(BIN1, BIN2, PWMB, right); }
-bool obstacleTooClose() {
-  const uint16_t mm = tof.read();
-  if (tof.timeoutOccurred()) return true;
-  if (mm < WARNING_MM) Serial.printf("warning: %u mm\n", mm);
-  return mm < STOP_MM;
+// 새 측정이 준비됐을 때만 읽어 정지 명령·통신 시간 확인을 계속한다.
+constexpr unsigned long SENSOR_MAX_AGE_MS = 250;
+uint16_t distanceMm = 0;
+bool distanceValid = false;
+unsigned long distanceReadMs = 0;
+
+void updateDistance() {
+  if (!tof.dataReady()) return;
+  distanceMm = tof.read(false);
+  distanceValid = !tof.timeoutOccurred() && tof.last_status == 0 &&
+                  tof.ranging_data.range_status == VL53L1X::RangeValid;
+  distanceReadMs = millis();
+  if (distanceValid && distanceMm <= WARNING_MM) Serial.printf("warning: %u mm\n", distanceMm);
 }
+
+bool obstacleTooClose() {
+  return !distanceValid || millis() - distanceReadMs > SENSOR_MAX_AGE_MS ||
+         distanceMm <= STOP_MM;
+}
+char currentCommand = 's';
+
 void setup() {
   Serial.begin(115200);
   for (int p : {STBY, AIN1, AIN2, PWMA, BIN1, BIN2, PWMB}) pinMode(p, OUTPUT);
@@ -29,12 +44,22 @@ void setup() {
   tof.setDistanceMode(VL53L1X::Long); tof.startContinuous(50);
 }
 void loop() {
-  if (!Serial.available()) return;
-  const char command = tolower(Serial.read());
-  if (command == 'f' && obstacleTooClose()) { drive(0, 0); Serial.println("forward blocked"); return; }
-  if (command == 'f') drive(SPEED, SPEED);
-  if (command == 'b') drive(-SPEED, -SPEED);
-  if (command == 'l') drive(-SPEED, SPEED);
-  if (command == 'r') drive(SPEED, -SPEED);
-  if (command == 's') drive(0, 0);
+  updateDistance();
+  while (Serial.available()) {
+    const char command = tolower(Serial.read());
+    if (command == 'f' || command == 'b' || command == 'l' ||
+        command == 'r' || command == 's') currentCommand = command;
+  }
+  // f를 한 번만 입력해도 주행 중 계속 센서를 감시한다.
+  // 장애물로 멈춘 뒤 자동 재출발하지 않고 새 f 명령을 기다린다.
+  if (currentCommand == 'f' && obstacleTooClose()) {
+    currentCommand = 's';
+    Serial.println("forward blocked");
+  }
+  if (currentCommand == 'f') drive(SPEED, SPEED);
+  if (currentCommand == 'b') drive(-SPEED, -SPEED);
+  if (currentCommand == 'l') drive(-SPEED, SPEED);
+  if (currentCommand == 'r') drive(SPEED, -SPEED);
+  if (currentCommand == 's') drive(0, 0);
+  delay(1);
 }
