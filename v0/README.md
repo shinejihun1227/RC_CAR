@@ -4,7 +4,9 @@ ESP32가 좌우 모터의 방향과 속도를 제어하고 시리얼 명령으�
 
 ## 배우는 코딩
 
-상수로 핀과 속도를 정의한다. 함수를 이용해 모터 한 개의 동작을 묶고, if 조건문으로 명령을 해석한다. GPIO 디지털 출력은 방향을, PWM은 구동 세기를 결정한다.
+Arduino IDE에서 C 문법 중심으로 진행한다. [단계별 문법·수정 과제](../course/ARDUINO_C_GUIDE.md)를 함께 사용한다.
+
+`const int`로 핀과 속도를 정의한다. 함수를 이용해 모터 한 개의 동작을 묶고, `if`로 모터 방향을 판단하며 `switch`로 시리얼 명령을 해석한다. GPIO 디지털 출력은 방향을, PWM은 구동 세기를 결정한다.
 
 ## 하드웨어와 부품
 
@@ -18,12 +20,12 @@ ESP32 1개, TB6612FNG 1개, TT 모터·바퀴 각 2개, AA 4개, 5V 벅-부스�
 
 | 스케치 | 실습 내용 |
 |---|---|
-| [01_motor_test](firmware/01_motor_test/01_motor_test.ino) | 좌우 모터를 순서대로 구동해 방향 확인 |
+| [01_motor_test](firmware/01_motor_test/01_motor_test.ino) | 좌우 모터를 함께 전진·정지·후진·정지시켜 방향 확인 |
 | [02_basic_drive](firmware/02_basic_drive/02_basic_drive.ino) | f/b/l/r/s 시리얼 명령으로 전후진·회전·정지 |
 
 ## 확인할 결과
 
-전원 투입 때 임의로 움직이지 않고 다섯 명령이 의도대로 동작하는지 확인한다.
+단품 테스트는 업로드 후 전후진을 자동 반복하므로 바퀴를 띄워 확인한다. 기본 주행 코드는 전원 투입 후 명령을 기다리며, 다섯 명령이 의도대로 동작하는지 확인한다.
 
 [요구사항](docs/requirements.md) · [시험 절차](docs/test-plan.md) · [장비 설정](../course/CONFIGURATION.md) · [실습 기록](../course/LAB_RECORD.md)
 

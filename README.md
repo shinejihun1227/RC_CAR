@@ -1,6 +1,8 @@
 # RC_CAR · ESP32 RC카 강의 실습
 
-기본 모터 주행부터 거리 감지, 무선 조종, 손 제스처, 4륜 PID 속도 제어까지 직접 구현하는 강의용 저장소입니다. 수업에 필요한 코드·배선·부품·설계·Python 실습을 모았습니다.
+기본 모터 주행부터 거리 감지, 무선 조종, 손 제스처, 4륜 PID 속도 제어까지 직접 구현하는 강의용 저장소입니다. **ESP32에 Arduino IDE로 코드를 업로드하고, C언어 문법 중심으로 실습합니다.** 수업에 필요한 코드·배선·부품·설계를 모았습니다.
+
+학생이 작성하는 제어 로직은 변수, 조건문, 반복문, 함수, 배열, 구조체로 구성합니다. `.ino`는 C++로 컴파일되며 `Serial`, `Wire`, 센서 객체는 Arduino 라이브러리의 API를 사용합니다. [C언어 중심 실습 안내](course/ARDUINO_C_GUIDE.md)에서 이 구분과 단계별 과제를 확인합니다.
 
 ## v0~v4에서 배우는 것
 
@@ -16,7 +18,7 @@ v0~v3은 TT 모터 2개로 기능을 익힙니다. v4에서는 N20 엔코더 모
 
 ## 수업 시작
 
-1. [전체 학습 흐름](course/README.md)과 [설치·업로드 준비](course/setup/README.md)를 확인합니다.
+1. [전체 학습 흐름](course/README.md), [C언어 중심 실습 안내](course/ARDUINO_C_GUIDE.md), [설치·업로드 준비](course/setup/README.md)를 확인합니다.
 2. [전체 부품표](parts/BOM.md)에서 해당 단계의 부품을 준비합니다.
 3. v0부터 README, 배선표, 단품 테스트, 통합 코드를 순서대로 진행합니다.
 4. [장비별 설정](course/CONFIGURATION.md)에 따라 MAC 주소, 모터 방향, 엔코더 펄스 수를 설정합니다.
@@ -29,8 +31,7 @@ RC_CAR/
 ├─ v0/ ... v4/       단계별 설명·배선·시험 절차·Arduino 코드
 ├─ course/           전체 학습 흐름·설치·설정·실습 기록
 ├─ parts/            부품 역할·원리·전체 BOM·구매 규격
-├─ hardware/         Fusion 360 설계 코드·참조 부품·STL
-└─ python/           ESP32 USB 시리얼 분석·주행 실습
+└─ hardware/         Fusion 360 설계 코드·참조 부품·STL
 ```
 
 | 자료 | 용도 |
@@ -38,12 +39,12 @@ RC_CAR/
 | [부품과 신호](parts/README.md) | ESP32·드라이버·모터·센서의 역할 |
 | [부품 작동 원리](parts/PRINCIPLES.md) | 전원, H-브리지·PWM, ToF, IMU, 엔코더·PID |
 | [Fusion 360·STL](hardware/README.md) | 실물 치수 확인과 차체·조종기 설계 |
-| [Python 실습](python/README.md) | 센서 로그, 제스처 판정, RPM 편차, 시리얼 조작 |
+| [Arduino C 실습](course/ARDUINO_C_GUIDE.md) | C 문법 학습 순서·코드 읽기·수정 과제·시리얼 확인 |
 
 차량 전원은 AA 알카라인 4개와 ESP32용 5V 벅-부스트를 기준으로 합니다. 모터 전원과 로직 전원을 구분하고 GND를 공통으로 연결합니다. 처음 모터를 시험할 때는 바퀴를 바닥에서 띄웁니다.
 
 ## 게시 범위
 
-GitHub에는 강의에서 직접 사용하는 코드·배선·부품·설계·Python 실습만 게시합니다. PPT·한글 문서와 제작 중간 자료는 로컬에서 관리합니다. 이후에도 적용할 기준은 [AGENTS.md](AGENTS.md)에 기록합니다.
+GitHub에는 강의에서 직접 사용하는 Arduino 코드·배선·부품·설계를 게시합니다. PPT·한글 문서, PC용 Python 시리얼 실습과 제작 중간 자료는 로컬에서 관리합니다. Fusion 360용 Python 생성기는 차체 설계 도구로 유지합니다. 이후에도 적용할 기준은 [AGENTS.md](AGENTS.md)에 기록합니다.
 
 MAC 주소, 엔코더 PPR, PID 계수와 설계 치수는 장비에 맞춰 확인해야 합니다. 컴파일 확인과 실물 주행 시험은 별도로 기록합니다.
