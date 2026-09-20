@@ -12,7 +12,8 @@ clear when the script finishes.
 Nominal layout
 --------------
   chassis: 300 x 400 x 5 mm with solid motor zones and a TT mounting bridge
-  N20: four visible exchangeable motor mounting pods with open clamp cheeks
+  N20: two visible exchangeable motor mounting pods with open clamp cheeks;
+       rear positions remain passive-wheel support zones
   TT: two hidden exchangeable mounting pods
   upper deck: 190 x 150 x 4 mm
 
@@ -743,7 +744,7 @@ def make_reference_layout(assembly):
             40,
         ),
         (
-            "90_REF_TB6612FNG_Envelope_A",
+            "90_REF_TB6612FNG_Envelope",
             "24 mm",
             "21 mm",
             "4 mm",
@@ -751,19 +752,7 @@ def make_reference_layout(assembly):
             21,
             4,
             20,
-            20,
-            40,
-        ),
-        (
-            "90_REF_TB6612FNG_Envelope_B",
-            "24 mm",
-            "21 mm",
-            "4 mm",
-            24,
-            21,
-            4,
-            20,
-            55,
+            35,
             40,
         ),
     ]
@@ -854,13 +843,12 @@ def build_assembly(design):
     structural.extend(make_frame_rails(assembly))
     structural.append(make_tt_mounting_bridge(assembly))
 
-    # N20 is the primary visible layout.  The mounting frame remains visible;
-    # the motor/wheel reference geometry is hidden in 90_REFERENCE.
+    # N20 is the primary visible layout.  Only FL/FR are powered.  The rear
+    # RL/RR positions are reserved for measured passive-wheel supports; no
+    # motor bracket or encoder reference is created for those positions.
     for label, x_mm, y_mm in (
         ("FL", -105, 150),
         ("FR", 105, 150),
-        ("RL", -105, -150),
-        ("RR", 105, -150),
     ):
         structural.append(
             make_motor_bracket(assembly, "N20", label, x_mm, y_mm, True)

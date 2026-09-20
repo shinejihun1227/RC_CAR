@@ -436,15 +436,43 @@ def make_motor_interface_pad(assembly, label, x_mm, y_mm):
     return occurrence
 
 
+def make_passive_wheel_support(assembly, label, x_mm, y_mm):
+    """Generic rear support zone; final axle/caster dimensions are measured later."""
+    occurrence, component = make_box_part(
+        assembly,
+        "02_ROVER_Passive_Wheel_Support_" + label,
+        "motor_pad_width",
+        "motor_pad_length",
+        "motor_pad_height",
+        82,
+        28,
+        8,
+        x_mm,
+        y_mm,
+        6,
+    )
+    cut_circles(
+        component,
+        "02_Passive_Support_M3_Hole_" + label,
+        [(-25, -7), (25, -7), (-25, 7), (25, 7)],
+        "m3_clearance_diameter",
+        "motor_pad_height",
+    )
+    return occurrence
+
+
 def make_motor_interface_pads(assembly):
     parts = []
     for label, x_mm, y_mm in (
         ("FL", -115, -135),
         ("FR", 115, -135),
+    ):
+        parts.append(make_motor_interface_pad(assembly, label, x_mm, y_mm))
+    for label, x_mm, y_mm in (
         ("RL", -115, 135),
         ("RR", 115, 135),
     ):
-        parts.append(make_motor_interface_pad(assembly, label, x_mm, y_mm))
+        parts.append(make_passive_wheel_support(assembly, label, x_mm, y_mm))
     return parts
 
 
@@ -593,7 +621,8 @@ def run(context):
             pass
         ui.messageBox(
             "RC_CAR 로버형 샤시만 생성했습니다.\n\n"
-            "포함: 하부 차체, 좌우 레일, 범퍼, N20/TT 어댑터 패드 4개, "
+            "포함: 하부 차체, 좌우 레일, 범퍼, 좌우 N20 패드 2개, "
+            "뒤 수동 바퀴 지지 구역 2개, "
             "상부 데크, 작업 장치 인터페이스\n"
             "미포함: 모터, 바퀴, 서보, ESP32, 드라이버, 배터리, STL\n\n"
             "Modify → Change Parameters에서 크기를 확인하세요."

@@ -15,13 +15,13 @@ RC_CAR_ROVER_CHASSIS
 ├─ 01_ROVER_Lower_Tub_Plate
 ├─ 01_ROVER_Left/Right_Raised_Side_Rail
 ├─ 01_ROVER_Front/Rear_Bumper_Beam
-├─ 02_ROVER_Motor_Interface_Pad_FL/FR/RL/RR
+├─ 02_ROVER_Motor_Interface_Pad_FL/FR + Passive_Wheel_Support_RL/RR
 ├─ 03_ROVER_Upper_Deck_Post_FL/FR/RL/RR
 ├─ 03_ROVER_Upper_Electronics_Deck
 └─ 04_ROVER_Arm_Base_Interface
 ```
 
-모터나 바퀴를 모델 안에 집어넣지 않았습니다. 대신 네 모서리의 `Motor_Interface_Pad`에 나중에 N20 브래킷 또는 TT 브래킷을 M3 나사로 교체 장착하는 방식입니다. 즉, 이 파일에서 먼저 확인할 것은 차체의 비율과 체결 공간입니다.
+모터나 바퀴를 모델 안에 집어넣지 않았습니다. 대신 앞쪽 좌우 `Motor_Interface_Pad`에는 N20 브래킷을, 뒤쪽 좌우에는 실제 수동 바퀴에 맞춘 축·캐스터 지지부를 M3 체결로 장착하는 방식입니다. 즉, 이 파일에서 먼저 확인할 것은 차체의 비율과 체결 공간입니다.
 
 ## 기본 크기
 
@@ -31,7 +31,7 @@ RC_CAR_ROVER_CHASSIS
 | 하부 서비스 개구부 | 150 × 260 mm |
 | 좌우 레일 | 8 × 370 × 36 mm |
 | 앞뒤 범퍼 | 290 × 12 × 32 mm |
-| 모터 어댑터 패드 | 82 × 28 × 8 mm, 4개 |
+| 모터 어댑터 패드 | 82 × 28 × 8 mm, 2개(좌우 N20 구동) |
 | 패드 M3 홀 패턴 | 50 × 14 mm 중심 간격 |
 | 상부 데크 | 280 × 250 × 5 mm |
 | 작업 장치 패드 | Ø126 × 6 mm |
@@ -54,4 +54,4 @@ RC_CAR_ROVER_CHASSIS
 
 `Modify → Change Parameters`에서 판 두께와 데크 두께는 먼저 조정할 수 있습니다. 전체 폭·길이를 크게 바꾸거나 포스트 위치를 변경할 때는 파라미터를 바꾼 뒤 스크립트를 다시 실행하는 편이 안전합니다. 발생 위치가 발생학적으로 모두 연결된 단일 스케치가 아니라, 읽기 쉬운 부품별 컴포넌트로 나뉘어 있기 때문입니다.
 
-N20/TT 호환은 네 개의 패드에 실제 브래킷을 고정하는 설계입니다. 모터의 실제 고정홀, 축 중심 높이, 바퀴 지름을 확인하기 전에는 패드에 모터 형상을 직접 결합하지 않습니다.
+앞쪽 N20 호환은 두 개의 패드에 실제 브래킷을 고정하는 설계입니다. 뒤쪽 수동 바퀴 지지부와 모터의 실제 고정홀, 축 중심 높이, 바퀴 지름을 확인하기 전에는 형상을 직접 결합하지 않습니다.

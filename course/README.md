@@ -8,7 +8,7 @@ Arduino IDE에서 C언어 문법 중심으로 코딩하고 ESP32에서 실행한
 | [v1](../v1/README.md) | 거리를 숫자로 읽고 전진 허용 여부를 판단하는 과정 | Wire, 센서 초기화, 조건식, millis, 현재 명령 상태 | SDA/SCL과 센서 전원, 거리별 측정 | 20cm 이하 전진 정지 시험 |
 | [v2](../v2/README.md) | 조종기 입력을 명령 패킷으로 바꿔 차량에 전달하는 과정 | analogRead, map, 데드존, struct, callback, 시간 초과 | ESP32 2개, 조이스틱, 정지 버튼 | 무선 조종·통신 끊김 정지 시험 |
 | [v3](../v3/README.md) | 가속도로 기울기를 추정하고 같은 패킷으로 보내는 과정 | atan2, sqrt, 평균, 중립 오프셋, 각도→명령 변환 | BMI270 I²C 배선과 장착 방향 | 중립·전후·좌우 제스처 시연 |
-| [v4](../v4/README.md) | 모터를 돌리는 명령과 실제 회전 속도의 차이를 보정하는 과정 | ISR, volatile, 임계 구역, 배열, dt, P/I/D | 모터별 독립 구동, CHA 4개, PPR 실측 | 네 RPM 기록·직진 편차 비교 |
+| [v4](../v4/README.md) | 좌우 구동 모터의 명령과 실제 회전 속도 차이를 보정하는 과정 | ISR, volatile, 임계 구역, 배열, dt, P/I/D | 좌우 모터 독립 구동, CHA 2개, 뒤 수동 바퀴, PPR 실측 | 좌우 RPM 기록·직진 편차 비교 |
 
 ## 수업 진행 방식
 
@@ -38,7 +38,7 @@ v0의 간단한 주행이 v1의 안전 판단을 이해하는 출발점이다. v
 | v1 안전 주행 | [02_safety_stop](../v1/firmware/02_safety_stop/02_safety_stop.ino) | 입력창에서 f/b/l/r/s를 전송하고 전진 정지 확인 |
 | v3 센서 단품 | [00_bmi270_read](../v3/firmware/00_bmi270_read/00_bmi270_read.ino) | 가속도·자이로 값의 축과 단위 |
 | v3 제스처 판정 | [01_gesture_map_test](../v3/firmware/01_gesture_map_test/01_gesture_map_test.ino) | Roll/Pitch와 STOP/FORWARD/BACKWARD/LEFT/RIGHT |
-| v4 엔코더 단품 | [00_encoder_read](../v4/firmware/00_encoder_read/00_encoder_read.ino) | 네 바퀴의 펄스 수와 RPM 기록 |
+| v4 엔코더 단품 | [00_encoder_read](../v4/firmware/00_encoder_read/00_encoder_read.ino) | 좌우 구동륜의 펄스 수와 RPM 기록 |
 | v4 PID 조정 | [01_speed_pid_tune](../v4/firmware/01_speed_pid_tune/01_speed_pid_tune.ino) | f/b/s와 +/- 명령으로 목표 RPM과 실제 RPM 비교 |
 
 v3 제스처 판정 단품은 원시 가속도로 각도를 계산한다. v3 통합 조종기는 부팅 시 100회 평균으로 중립을 보정하므로 둘의 출력 기준을 구분해서 설명한다. 측정값은 [실습 기록](LAB_RECORD.md)에 적는다.

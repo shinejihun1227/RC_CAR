@@ -219,20 +219,23 @@ def build_reference_assembly(design):
 
     add_box_part(assembly, "00_CHASSIS_REFERENCE_BASE", "ref_chassis_width", "ref_chassis_length", "ref_chassis_thickness", 300, 400, 5, 0, 0, 0)
 
-    motor_positions = [
+    powered_positions = [
         ("FL", -112, 135),
         ("FR", 112, 135),
-        ("RL", -112, -135),
-        ("RR", 112, -135),
     ]
-    for label, x_mm, y_mm in motor_positions:
+    for label, x_mm, y_mm in powered_positions:
         add_box_part(assembly, "REF_N20_Bracket_" + label, "40 mm", "18 mm", "27.5 mm", 40, 18, 27.5, x_mm, y_mm, 5)
         add_n20_reference(assembly, label, x_mm, y_mm, 18)
         add_wheel_reference(assembly, label, x_mm, y_mm, 34)
 
+    # Rear wheels are passive.  The generic wheel envelope is retained only
+    # for layout/clearance review; measure the purchased wheel before fixing
+    # the axle, caster, or support height.
+    for label, x_mm, y_mm in (("RL", -112, -135), ("RR", 112, -135)):
+        add_wheel_reference(assembly, "Passive_" + label, x_mm, y_mm, 34)
+
     add_box_part(assembly, "REF_ESP32_DevKit_V1", "55 mm", "28 mm", "12 mm", 55, 28, 12, 0, 40, 20)
-    add_box_part(assembly, "REF_TB6612FNG_Left", "33 mm", "25 mm", "8 mm", 33, 25, 8, -48, 40, 20)
-    add_box_part(assembly, "REF_TB6612FNG_Right", "33 mm", "25 mm", "8 mm", 33, 25, 8, 48, 40, 20)
+    add_box_part(assembly, "REF_TB6612FNG", "33 mm", "25 mm", "8 mm", 33, 25, 8, 0, 40, 20)
     add_box_part(assembly, "REF_AA_4Cell_Holder", "ref_battery_length", "ref_battery_width", "ref_battery_height", 60, 32, 31, 0, -70, 8)
     add_box_part(assembly, "REF_Buck_Boost_5V", "45 mm", "20 mm", "10 mm", 45, 20, 10, 0, -125, 20)
     add_box_part(assembly, "REF_VL53L1X_ToF", "21 mm", "17 mm", "6 mm", 21, 17, 6, 0, 188, 8)
