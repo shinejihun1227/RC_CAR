@@ -1,4 +1,4 @@
-// Arduino Mega 2560 + L298N: short, serial-triggered motor test.
+// Arduino Mega 2560 + L298N: short, serial-triggered motor practice.
 // Connect 12 V ONLY after confirming both motors are rated for 12 V.
 // 5V-EN jumper ON; ENA/ENB jumpers OFF; Mega powered by USB.
 
@@ -57,7 +57,7 @@ void loop() {
       }
       testStartedMs = millis();
       testRunning = true;
-      Serial.print(F("Running test "));
+      Serial.print(F("Motor command "));
       Serial.println(command);
     }
   }

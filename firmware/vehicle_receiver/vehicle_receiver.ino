@@ -20,9 +20,9 @@ const uint8_t PIN_IN4 = 25;
 const uint8_t PIN_RADIO_CE = 7;
 const uint8_t PIN_RADIO_CSN = 8;
 
-const bool LEFT_MOTOR_INVERTED = false;   // Adjust after a raised-wheel test.
-const bool RIGHT_MOTOR_INVERTED = false;  // Adjust after a raised-wheel test.
-const uint8_t MAX_PWM = 140;              // 0..255; conservative first test.
+const bool LEFT_MOTOR_INVERTED = false;   // Adjust while the wheels are raised.
+const bool RIGHT_MOTOR_INVERTED = false;  // Adjust while the wheels are raised.
+const uint8_t MAX_PWM = 140;              // 0..255; start with a modest output.
 const uint16_t STOP_DISTANCE_MM = 300;   // Example only; measure stopping distance.
 const uint16_t RESUME_DISTANCE_MM = 400; // Hysteresis prevents rapid toggling.
 const uint32_t RADIO_TIMEOUT_MS = 300;

@@ -8,7 +8,7 @@
 #define VEHICLE_ID 1       // Must match vehicle_receiver.
 #define RADIO_CHANNEL 76  // Must match vehicle_receiver.
 #ifndef USE_JOYSTICK
-#define USE_JOYSTICK 0    // 0=serial test, 1=analog joystick.
+#define USE_JOYSTICK 0    // 0=serial practice, 1=analog joystick.
 #endif
 
 const uint8_t PIN_RADIO_CE = 7;
