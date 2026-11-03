@@ -9,10 +9,10 @@
 1. [모터 코드](firmware/motor_practice/motor_practice.ino)를 Mega에 올려 바퀴 방향을 확인합니다.
 2. [거리 센서 코드](firmware/distance_practice/distance_practice.ino)를 Mega에 올려 거리값을 읽습니다.
 3. 무선 본체 두 개를 연결하고 [수신 코드](firmware/radio_receive_practice/radio_receive_practice.ino)는 Mega, [송신 코드](firmware/radio_send_practice/radio_send_practice.ino)는 Uno에 올려 통신만 확인합니다.
-4. 조이스틱이 있다면 [조이스틱 코드](firmware/joystick_practice/joystick_practice.ino)를 Uno에 올려 축 값을 확인합니다.
+4. 조이스틱이 있다면 [조이스틱 코드](firmware/joystick_practice/joystick_practice.ino)를 Uno에 올려 두 개의 축·버튼 값을 확인합니다.
 5. [차량 코드](firmware/vehicle_receiver/vehicle_receiver.ino)는 Mega, [조종기 코드](firmware/controller_transmitter/controller_transmitter.ino)는 Uno에 올려 주행과 장애물 정지를 확인합니다. 단계별 배선과 결과는 [실습 진행](docs/practice.md)에 적었습니다.
 
-조이스틱이 없어도 조종기 Uno의 시리얼 모니터에서 `w`(전진), `s`(후진), `a`·`d`(회전), `x`(정지)를 보낼 수 있습니다. 나중에 조이스틱을 연결하면 조종기 코드의 `USE_JOYSTICK`을 `1`로 바꾸면 됩니다.
+조이스틱이 없어도 조종기 Uno의 시리얼 모니터에서 `w`(전진), `s`(후진), `a`·`d`(회전), `x`(정지)를 보낼 수 있습니다. 조이스틱으로 주행할 때는 조종기 코드의 `USE_JOYSTICK`을 `1`로 바꿉니다. 현재 전체 주행 코드는 1번 조이스틱만 사용하고, 2번은 입력 확인 실습에서만 읽습니다.
 
 ## 필요한 문서
 

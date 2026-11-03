@@ -54,14 +54,16 @@ Mega와 Uno의 SPI 핀 번호가 다릅니다. [RF24의 Arduino 연결 안내](h
 
 무선 본체의 8개 핀은 `GND`(0 V), `VCC`(3.3 V), `CE`(무선 동작 제어), `CSN`(SPI 선택), `SCK`(SPI 클록), `MOSI`(Arduino→무선 데이터), `MISO`(무선→Arduino 데이터), `IRQ`(인터럽트 출력)입니다. 이번 코드에서는 `IRQ`를 쓰지 않습니다. **핀 이름이 인쇄되지 않은 본체에 방향만 보고 5 V 또는 3.3 V를 꽂지 마세요.** 제품 사진은 본체를 앞·뒤에서 찍어서 2×4 핀의 좌우가 바뀌어 보입니다. 실물의 부품면과 안테나 방향을 기준으로 [PA/LNA 모듈 제조사 핀 배치도](https://www.sirius-pcb.com/download/YTozOntzOjY6Im9iamVjdCI7czo4OiJwcm9kdWN0cyI7czo5OiJmaWxlX3R5cGUiO3M6OToiZG9jdW1lbnRzIjtzOjc6ImZpbGVfaWQiO3M6NToiMjIxNjYiO30%3D)를 대조하거나, 핀 이름이 표시된 소켓 어댑터에 본체를 꽂아 사용합니다. 어댑터의 실제 입력 전압 표시도 확인하세요.
 
-## 조이스틱을 추가할 때
+## 조종기 Uno: 조이스틱 두 개
 
-| 조이스틱 | Uno |
-|---|---|
-| `VRx` | `A0` |
-| `VRy` | `A1` |
-| `VCC` | `5V` (5 V 호환 모듈일 때) |
-| `GND` | `GND` |
-| `SW` | 연결하지 않음 |
+| 조이스틱 핀 | 1번 조이스틱(주행) | 2번 조이스틱(예비) |
+|---|---|---|
+| `GND` | Uno `GND` | Uno `GND` |
+| `5V` | Uno `5V` | Uno `5V` |
+| `VRx` | Uno `A0` | Uno `A2` |
+| `VRy` | Uno `A1` | Uno `A3` |
+| `SW` | Uno `D2` (선택) | Uno `D3` (선택) |
 
-연결 후 `controller_transmitter.ino`의 `USE_JOYSTICK`을 `1`로 바꿉니다. 조이스틱이 없다면 기본값 `0`을 유지하고 시리얼 모니터로 조종합니다.
+두 `5V` 선과 두 `GND` 선은 각각 Uno의 같은 5 V·GND 전원선으로 나눠 연결합니다. 조이스틱 보드가 **5 V 입력형인지** 먼저 확인하세요. `VRx`는 좌우, `VRy`는 위아래 위치를 0~1023의 아날로그 값으로 읽습니다. 중앙은 대체로 약 512입니다. `SW`는 스틱을 아래로 누르는 버튼입니다. 이번 입력 확인 코드에서는 `INPUT_PULLUP`으로 읽어 **누르면 LOW**, 놓으면 HIGH입니다. [Arduino 아날로그 입력](https://docs.arduino.cc/tutorials/uno-rev3/AnalogReadSerial), [내부 풀업 입력](https://docs.arduino.cc/language-reference/en/variables/constants/inputOutputPullup/)
+
+`joystick_practice.ino`는 **두 조이스틱의 축과 버튼을 모두 표시**합니다. 현재 `controller_transmitter.ino`는 `USE_JOYSTICK=1`일 때 **1번의 A0/A1만 주행 명령으로 사용**하며, 버튼과 2번 조이스틱은 아직 주행·로봇팔 기능이 없습니다. 조이스틱 없이 시리얼로 조종할 때는 `USE_JOYSTICK=0`을 유지합니다.

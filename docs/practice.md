@@ -7,7 +7,7 @@ Arduino IDE에서 `.ino` 파일을 열고 보드를 선택합니다. 차량은 *
 | 1. 모터 | [motor_practice.ino](../firmware/motor_practice/motor_practice.ino) | 없음 | Mega, L298N, 모터 두 개 |
 | 2. 거리 | [distance_practice.ino](../firmware/distance_practice/distance_practice.ino) | 없음 | Mega, VL53L0X |
 | 3. 무선 | [radio_receive_practice.ino](../firmware/radio_receive_practice/radio_receive_practice.ino) | [radio_send_practice.ino](../firmware/radio_send_practice/radio_send_practice.ino) | Mega·Uno, 무선 본체 두 개와 각 전원 어댑터 |
-| 4. 조이스틱(선택) | 없음 | [joystick_practice.ino](../firmware/joystick_practice/joystick_practice.ino) | Uno, 5 V 호환 조이스틱 |
+| 4. 조이스틱(선택) | 없음 | [joystick_practice.ino](../firmware/joystick_practice/joystick_practice.ino) | Uno, 5 V 호환 조이스틱 1~2개 |
 | 5. 전체 주행 | [vehicle_receiver.ino](../firmware/vehicle_receiver/vehicle_receiver.ino) | [controller_transmitter.ino](../firmware/controller_transmitter/controller_transmitter.ino) | 앞의 모든 부품; 조이스틱은 선택 |
 
 앞 실습의 코드를 지우는 별도 작업은 없습니다. 새 스케치를 업로드하면 그 보드에 있던 코드가 바뀝니다. **3번 무선 실습용 코드 두 개는 한 쌍**, **5번 전체 주행용 코드 두 개는 한 쌍**입니다. 3번 송신기와 5번 수신기를 섞으면 패킷 형식이 달라 통신 실습이 되지 않습니다.
@@ -28,7 +28,7 @@ L298N 모터 전원을 끄고 센서만 Mega에 연결합니다. 센서 보드�
 
 ## 4. 조이스틱 입력(조이스틱이 있을 때만)
 
-Uno의 `A0`에 `VRx`, `A1`에 `VRy`를 연결하고, 조이스틱 보드가 5 V 호환이면 `5V`와 `GND`도 연결합니다. `joystick_practice.ino`를 Uno에 올립니다. 막대를 놓았을 때 두 값이 대략 **512**이고 움직이는 방향에 따라 0~1023 사이에서 변하는지 확인합니다. 중앙값은 제품마다 조금 다릅니다. 이 실습에는 무선 모듈이나 Mega가 필요 없습니다.
+1번 조이스틱은 Uno `A0`에 `VRx`, `A1`에 `VRy`, 선택적으로 `D2`에 `SW`를 연결합니다. 2번은 `A2`에 `VRx`, `A3`에 `VRy`, 선택적으로 `D3`에 `SW`를 연결합니다. 두 보드가 5 V 입력형이면 각 보드의 `5V`와 `GND`도 Uno 전원에 연결합니다. `joystick_practice.ino`를 Uno에 올리면 두 조이스틱의 X/Y 값과 버튼 상태를 한 줄에 표시합니다. 막대를 놓았을 때 각 축이 대략 **512**이고 움직이면 0~1023 사이에서 변하는지 확인하세요. 스틱을 누르면 `PRESSED`가 나옵니다. 중앙값은 제품마다 조금 다릅니다. 이 실습에는 무선 모듈이나 Mega가 필요 없습니다.
 
 ## 5. 전체 주행
 
@@ -38,7 +38,7 @@ Mega에 `vehicle_receiver.ino`, Uno에 `controller_transmitter.ino`를 올립니
 
 차량을 여러 대 만들면 각 Mega 코드의 `VEHICLE_ID`를 **1~16처럼 서로 다르게** 바꿔 올립니다. 조종하려는 차량의 ID로 Uno 코드의 `VEHICLE_ID`도 바꿔 올립니다. 같은 ID의 차량을 두 대 켜면 둘 다 같은 명령을 받을 수 있습니다. 한 조종기로 번갈아 제어하는 경우에도 차량 ID를 구분하세요.
 
-조이스틱을 사용한다면 Uno 코드의 `USE_JOYSTICK`을 `1`로 바꿔 다시 올립니다. 기본값 `0`은 시리얼 입력용입니다. 처음에는 모터 전원을 끄고 중앙에서 `cmd=0,0`에 가까운지 확인합니다.
+조이스틱으로 주행한다면 Uno 코드의 `USE_JOYSTICK`을 `1`로 바꿔 다시 올립니다. 기본값 `0`은 시리얼 입력용입니다. 현재 차량 주행 코드는 **1번 조이스틱 A0/A1만 사용**합니다. 2번 조이스틱과 `SW` 버튼은 연결해도 주행이나 로봇팔을 움직이지 않습니다. 처음에는 모터 전원을 끄고 1번 스틱 중앙에서 `cmd=0,0`에 가까운지 확인합니다.
 
 ## 3S 배터리로 옮길 때
 
