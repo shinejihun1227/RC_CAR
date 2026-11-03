@@ -1,10 +1,10 @@
 # 배선표
 
-아래 핀 번호는 저장소의 코드와 같습니다. 전원을 끈 상태에서 연결하고, L298N과 무선 어댑터의 핀 **이름**을 기판에서 확인하세요. 차량 Mega와 조종기 Uno는 무선으로만 통신합니다.
+아래 핀 번호는 저장소의 코드와 같습니다. 전원을 끈 상태에서 연결하고, L298N과 무선 어댑터의 핀 **이름**을 기판에서 확인하세요. 차량 Mega와 조종기 Uno는 무선으로만 통신합니다. 전원은 [12 V 어댑터/3S 배터리 배선표](power.md) 중 **한 가지 방식**을 골라 연결합니다.
 
 ## 차량: L298N과 두 모터
 
-이번 12 V 어댑터 구성에서는 L298N의 `5V-EN` 캡을 **끼우고**, `ENA`와 `ENB` 캡은 **뺍니다**. `5V-EN`은 파란색 `12V/GND/5V` 단자 위쪽의 `5VEN` 2핀입니다.
+이번 12 V 어댑터 구성에서는 L298N의 `5V-EN` 캡을 **끼우고**, `ENA`와 `ENB` 캡은 **뺍니다**. `5V-EN`은 파란색 `12V/GND/5V` 단자 위쪽의 `5VEN` 2핀입니다. **3S 배터리 구성에서는 `5V-EN`을 빼고 LM2596의 5 V 출력을 L298N `5V`에 넣습니다.**
 
 | 연결할 선 | 도착 단자 |
 |---|---|
@@ -12,15 +12,17 @@
 | 12 V 어댑터 `−` | L298N `GND` |
 | Mega `GND` | L298N `GND` |
 | Mega `D5` | L298N `ENA` |
-| Mega `D22`, `D23` | L298N `IN1`, `IN2` |
-| Mega `D24`, `D25` | L298N `IN3`, `IN4` |
+| Mega `D22` | L298N `IN1` |
+| Mega `D23` | L298N `IN2` |
+| Mega `D24` | L298N `IN3` |
+| Mega `D25` | L298N `IN4` |
 | Mega `D6` | L298N `ENB` |
 | 왼쪽 모터 두 선 | L298N `OUT1`, `OUT2` |
 | 오른쪽 모터 두 선 | L298N `OUT3`, `OUT4` |
 
 모터 선은 먼저 `+`를 `OUT1` 또는 `OUT3`, `−`를 `OUT2` 또는 `OUT4`에 연결합니다. 전진 명령에서 바퀴가 반대로 돌면 해당 모터 선 두 개를 맞바꾸거나 코드의 모터 반전값을 바꿉니다. `OUT3`와 `OUT4`의 위아래 위치는 보드에 적힌 글자를 따르세요.
 
-Mega는 USB로 켭니다. **Mega `5V`와 L298N `5V`는 연결하지 않습니다.** `5V-EN` 캡이 끼워진 L298N의 `5V` 단자는 자체 레귤레이터의 출력입니다. [L298N 점퍼와 단자 설명](https://docs.sunfounder.com/projects/sf-components/en/latest/component_l298n_module.html)
+**12 V 어댑터 실습에서는** Mega를 USB로 켭니다. 이때 **Mega `5V`와 L298N `5V`는 연결하지 않습니다.** `5V-EN` 캡이 끼워진 L298N의 `5V` 단자는 자체 레귤레이터의 출력입니다. 3S 배터리 구성에서는 [강압 모듈 배선](power.md#나중-차량에-3s-리튬이온-팩을-실을-때)을 따릅니다. [L298N 점퍼와 단자 설명](https://docs.sunfounder.com/projects/sf-components/en/latest/component_l298n_module.html)
 
 ## 차량: 거리 센서
 
@@ -35,11 +37,11 @@ Mega는 USB로 켭니다. **Mega `5V`와 L298N `5V`는 연결하지 않습니다
 
 ## 차량과 조종기: 무선 모듈
 
-각 Arduino에 nRF24L01+ 본체 한 개와 3.3 V 전원 어댑터 한 개가 필요합니다. 아래 `VCC`는 **5 V 입력이라고 표시된 소켓형 어댑터의 입력 핀**을 뜻합니다. 무선 모듈 본체 VCC에 5 V를 직접 연결하지 마세요. PA/LNA형 본체의 전원을 Mega·Uno의 3.3 V 핀에서 직접 공급하는 구성도 피합니다. [Nordic 전원 사양](https://devzone.nordicsemi.com/cfs-file/__key/support-attachments/beef5d1b77644c448dabff31668f3a47-aad1a46f307945a7b0204fd969e86bdf/content.pdf), [Mega 3.3 V 출력 한도](https://docs.arduino.cc/resources/pinouts/A000067-full-pinout.pdf)
+각 Arduino에 nRF24L01+ 본체 한 개와 3.3 V 전원 어댑터 한 개가 필요합니다. 구매 사진의 **위쪽 두 장은 소켓 어댑터, 아래쪽 두 장은 무선 본체**의 각 앞·뒷면입니다. 아래 `어댑터 VCC`는 **5 V 입력이라고 표시된 소켓형 어댑터의 입력 핀**을 뜻합니다. 무선 본체의 `VCC`에는 어댑터가 만든 **3.3 V**만 들어가야 합니다. PA/LNA형 본체의 전원을 Mega·Uno의 3.3 V 핀에서 직접 공급하는 구성도 피합니다. [Nordic 전원 사양](https://devzone.nordicsemi.com/cfs-file/__key/support-attachments/beef5d1b77644c448dabff31668f3a47-aad1a46f307945a7b0204fd969e86bdf/content.pdf), [Mega 3.3 V 출력 한도](https://docs.arduino.cc/resources/pinouts/A000067-full-pinout.pdf)
 
 | 무선 어댑터/모듈 | 차량 Mega | 조종기 Uno |
 |---|---|---|
-| 어댑터 `VCC` | `5V` | `5V` |
+| 어댑터 입력 `VCC` (5 V 입력형일 때) | `5V` | `5V` |
 | `GND` | `GND` | `GND` |
 | `CE` | `D7` | `D7` |
 | `CSN` 또는 `CS` | `D8` | `D8` |
@@ -49,6 +51,8 @@ Mega는 USB로 켭니다. **Mega `5V`와 L298N `5V`는 연결하지 않습니다
 | `IRQ` | 연결하지 않음 | 연결하지 않음 |
 
 Mega와 Uno의 SPI 핀 번호가 다릅니다. [RF24의 Arduino 연결 안내](https://github.com/nRF24/RF24/blob/master/docs/arduino.md)
+
+무선 본체의 8개 핀은 `GND`(0 V), `VCC`(3.3 V), `CE`(무선 동작 제어), `CSN`(SPI 선택), `SCK`(SPI 클록), `MOSI`(Arduino→무선 데이터), `MISO`(무선→Arduino 데이터), `IRQ`(인터럽트 출력)입니다. 이번 코드에서는 `IRQ`를 쓰지 않습니다. **핀 이름이 인쇄되지 않은 본체에 방향만 보고 5 V 또는 3.3 V를 꽂지 마세요.** 제품 사진은 본체를 앞·뒤에서 찍어서 2×4 핀의 좌우가 바뀌어 보입니다. 실물의 부품면과 안테나 방향을 기준으로 [PA/LNA 모듈 제조사 핀 배치도](https://www.sirius-pcb.com/download/YTozOntzOjY6Im9iamVjdCI7czo4OiJwcm9kdWN0cyI7czo5OiJmaWxlX3R5cGUiO3M6OToiZG9jdW1lbnRzIjtzOjc6ImZpbGVfaWQiO3M6NToiMjIxNjYiO30%3D)를 대조하거나, 핀 이름이 표시된 소켓 어댑터에 본체를 꽂아 사용합니다. 어댑터의 실제 입력 전압 표시도 확인하세요.
 
 ## 조이스틱을 추가할 때
 
