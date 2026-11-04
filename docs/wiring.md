@@ -1,69 +1,96 @@
-# 배선표
+# 전체 핀 배선표
 
-아래 핀 번호는 저장소의 코드와 같습니다. 전원을 끈 상태에서 연결하고, L298N과 무선 어댑터의 핀 **이름**을 기판에서 확인하세요. 차량 Mega와 조종기 Uno는 무선으로만 통신합니다. 전원은 [12 V 어댑터/3S 배터리 배선표](power.md) 중 **한 가지 방식**을 골라 연결합니다.
+**차량 Arduino Mega 2560이 무선 수신기**, **리모컨 Arduino Uno가 송신기**입니다. 두 Arduino 사이에 전원선이나 GND선을 잇지 않습니다. 전원을 끄고 배선한 뒤 [전원 연결](power.md) 순서대로 전압을 확인하세요.
 
-## 차량: L298N과 두 모터
+## 차량: 모터·L298N·Mega
 
-이번 12 V 어댑터 구성에서는 L298N의 `5V-EN` 캡을 **끼우고**, `ENA`와 `ENB` 캡은 **뺍니다**. `5V-EN`은 파란색 `12V/GND/5V` 단자 위쪽의 `5VEN` 2핀입니다. **3S 배터리 구성에서는 `5V-EN`을 빼고 LM2596의 5 V 출력을 L298N `5V`에 넣습니다.**
+LM2596로 L298N의 5 V 제어 전원을 공급하므로 **`5V-EN` 캡을 뺍니다.** `ENA`와 `ENB` 캡도 빼고 Mega에서 PWM 신호를 넣습니다. `5V-EN`은 파란 `12V/GND/5V` 단자 위의 `5VEN` 2핀입니다.
 
-| 연결할 선 | 도착 단자 |
-|---|---|
-| 12 V 어댑터 `+` | L298N `12V` |
-| 12 V 어댑터 `−` | L298N `GND` |
-| Mega `GND` | L298N `GND` |
-| Mega `D5` | L298N `ENA` |
-| Mega `D22` | L298N `IN1` |
-| Mega `D23` | L298N `IN2` |
-| Mega `D24` | L298N `IN3` |
-| Mega `D25` | L298N `IN4` |
-| Mega `D6` | L298N `ENB` |
-| 왼쪽 모터 두 선 | L298N `OUT1`, `OUT2` |
-| 오른쪽 모터 두 선 | L298N `OUT3`, `OUT4` |
-
-모터 선은 먼저 `+`를 `OUT1` 또는 `OUT3`, `−`를 `OUT2` 또는 `OUT4`에 연결합니다. 전진 명령에서 바퀴가 반대로 돌면 해당 모터 선 두 개를 맞바꾸거나 코드의 모터 반전값을 바꿉니다. `OUT3`와 `OUT4`의 위아래 위치는 보드에 적힌 글자를 따르세요.
-
-**12 V 어댑터 실습에서는** Mega를 USB로 켭니다. 이때 **Mega `5V`와 L298N `5V`는 연결하지 않습니다.** `5V-EN` 캡이 끼워진 L298N의 `5V` 단자는 자체 레귤레이터의 출력입니다. 3S 배터리 구성에서는 [강압 모듈 배선](power.md#나중-차량에-3s-리튬이온-팩을-실을-때)을 따릅니다. [L298N 점퍼와 단자 설명](https://docs.sunfounder.com/projects/sf-components/en/latest/component_l298n_module.html)
-
-## 차량: 거리 센서
-
-| VL53L0XV2 기판 | Mega |
-|---|---|
-| `SDA` | `D20` |
-| `SCL` | `D21` |
-| `GND` | `GND` |
-| `VIN` 또는 `VCC` | 기판이 5 V 입력형이면 `5V` |
-
-센서 기판이 3.3 V 전용이면 Mega의 5 V에 연결하지 마세요. `XSHUT`과 `GPIO1` 핀이 있다면 이번 구성에서는 사용하지 않습니다. Mega의 I²C 핀은 D20(SDA), D21(SCL)입니다. [Arduino I²C 핀 안내](https://docs.arduino.cc/learn/communication/wire/)
-
-## 차량과 조종기: 무선 모듈
-
-각 Arduino에 nRF24L01+ 본체 한 개와 3.3 V 전원 어댑터 한 개가 필요합니다. 구매 사진의 **위쪽 두 장은 소켓 어댑터, 아래쪽 두 장은 무선 본체**의 각 앞·뒷면입니다. 아래 `어댑터 VCC`는 **5 V 입력이라고 표시된 소켓형 어댑터의 입력 핀**을 뜻합니다. 무선 본체의 `VCC`에는 어댑터가 만든 **3.3 V**만 들어가야 합니다. PA/LNA형 본체의 전원을 Mega·Uno의 3.3 V 핀에서 직접 공급하는 구성도 피합니다. [Nordic 전원 사양](https://devzone.nordicsemi.com/cfs-file/__key/support-attachments/beef5d1b77644c448dabff31668f3a47-aad1a46f307945a7b0204fd969e86bdf/content.pdf), [Mega 3.3 V 출력 한도](https://docs.arduino.cc/resources/pinouts/A000067-full-pinout.pdf)
-
-| 무선 어댑터/모듈 | 차량 Mega | 조종기 Uno |
+| 연결할 핀/선 | 연결할 곳 | 역할 |
 |---|---|---|
-| 어댑터 입력 `VCC` (5 V 입력형일 때) | `5V` | `5V` |
-| `GND` | `GND` | `GND` |
-| `CE` | `D7` | `D7` |
-| `CSN` 또는 `CS` | `D8` | `D8` |
-| `SCK` | `D52` | `D13` |
-| `MOSI` | `D51` | `D11` |
-| `MISO` | `D50` | `D12` |
-| `IRQ` | 연결하지 않음 | 연결하지 않음 |
+| 어댑터 출력 `+` | L298N `12V`, LM2596 `IN+` | 모터 전원과 강압 입력 |
+| 어댑터 출력 `−` | L298N `GND`, LM2596 `IN−` | 전원 귀로 |
+| LM2596 `OUT+` (5.0 V 측정 후) | L298N `5V` | L298N 제어 회로 전원 |
+| LM2596 `OUT−` | L298N `GND` | 강압 출력 GND |
+| Mega `GND` | L298N `GND` | 신호 기준 공유 |
+| Mega `D5` | L298N `ENA` | A 모터 PWM 속도 |
+| Mega `D22` | L298N `IN1` | A 모터 방향 1 |
+| Mega `D23` | L298N `IN2` | A 모터 방향 2 |
+| Mega `D24` | L298N `IN3` | B 모터 방향 1 |
+| Mega `D25` | L298N `IN4` | B 모터 방향 2 |
+| Mega `D6` | L298N `ENB` | B 모터 PWM 속도 |
+| 왼쪽 모터 두 선 | L298N `OUT1`, `OUT2` | A 모터 출력 |
+| 오른쪽 모터 두 선 | L298N `OUT3`, `OUT4` | B 모터 출력 |
 
-Mega와 Uno의 SPI 핀 번호가 다릅니다. [RF24의 Arduino 연결 안내](https://github.com/nRF24/RF24/blob/master/docs/arduino.md)
+Mega는 책상 실습에서 **USB로 켭니다.** 이때 Mega `5V`와 L298N `5V`는 서로 연결하지 않습니다. 모터의 `+`와 `−` 표시는 전원이 고정된 단자라는 뜻이 아닙니다. L298N이 방향에 따라 출력 극성을 바꿉니다. 먼저 왼쪽 `+→OUT1`, `−→OUT2`, 오른쪽 `+→OUT3`, `−→OUT4`로 연결해 바퀴를 띄우고 방향을 확인합니다. 반대로 돌면 해당 모터의 두 선을 바꾸거나 코드의 반전 설정을 바꿉니다. [L298N 단자 설명](https://docs.sunfounder.com/projects/sf-components/en/latest/component_l298n_module.html)
 
-무선 본체의 8개 핀은 `GND`(0 V), `VCC`(3.3 V), `CE`(무선 동작 제어), `CSN`(SPI 선택), `SCK`(SPI 클록), `MOSI`(Arduino→무선 데이터), `MISO`(무선→Arduino 데이터), `IRQ`(인터럽트 출력)입니다. 이번 코드에서는 `IRQ`를 쓰지 않습니다. **핀 이름이 인쇄되지 않은 본체에 방향만 보고 5 V 또는 3.3 V를 꽂지 마세요.** 제품 사진은 본체를 앞·뒤에서 찍어서 2×4 핀의 좌우가 바뀌어 보입니다. 실물의 부품면과 안테나 방향을 기준으로 [PA/LNA 모듈 제조사 핀 배치도](https://www.sirius-pcb.com/download/YTozOntzOjY6Im9iamVjdCI7czo4OiJwcm9kdWN0cyI7czo5OiJmaWxlX3R5cGUiO3M6OToiZG9jdW1lbnRzIjtzOjc6ImZpbGVfaWQiO3M6NToiMjIxNjYiO30%3D)를 대조하거나, 핀 이름이 표시된 소켓 어댑터에 본체를 꽂아 사용합니다. 어댑터의 실제 입력 전압 표시도 확인하세요.
+## 차량: VL53L0XV2 거리 센서
 
-## 조종기 Uno: 조이스틱 두 개
+| 센서 기판 | Mega | 역할 |
+|---|---|---|
+| `SDA` | `D20` | I²C 데이터 |
+| `SCL` | `D21` | I²C 클록 |
+| `GND` | `GND` | 접지 |
+| `VIN`/`VCC` | 기판이 5 V 입력형이면 `5V` | 센서 전원 |
 
-| 조이스틱 핀 | 1번 조이스틱(주행) | 2번 조이스틱(예비) |
+센서 기판이 3.3 V 전용이면 5 V에 연결하지 말고 기판 사양에 맞는 전원·I²C 전압 변환을 사용합니다. `XSHUT`과 `GPIO1`은 현재 미사용입니다. 이 센서를 연결하지 않으면 현재 차량 코드는 **전진을 막습니다.** [Arduino Mega I²C 핀](https://docs.arduino.cc/learn/communication/wire/)
+
+## 양쪽 Arduino: nRF24L01+ PA/LNA 무선
+
+각 Arduino에 무선 **본체 한 개**가 필요합니다. 구매 사진의 위쪽 두 장은 **5 V 입력·3.3 V 출력 소켓 어댑터**의 앞·뒷면이고, 아래쪽 두 장은 **무선 본체**의 앞·뒷면입니다. 이 어댑터가 실제로 없다면 본체마다 하나씩 구하거나 동급의 안정적인 3.3 V 전원을 준비하세요. 본체 `VCC`에 **5 V를 직접 넣지 않습니다.** [PA/LNA 모듈 전원 사양](https://www.sirius-pcb.com/download/YTozOntzOjY6Im9iamVjdCI7czo4OiJwcm9kdWN0cyI7czo5OiJmaWxlX3R5cGUiO3M6OToiMjIxNjYiO30%3D)
+
+| 무선 소켓 어댑터/본체 핀 | 차량 Mega | 리모컨 Uno | 역할 |
+|---|---|---|---|
+| 어댑터 입력 `VCC` (5 V 입력형) | `5V` | `5V` | 어댑터 전원 |
+| `GND` | `GND` | `GND` | 접지 |
+| `CE` | `D7` | `D7` | 송수신 동작 제어 |
+| `CSN`/`CS` | `D8` | `D8` | SPI 칩 선택 |
+| `SCK` | `D52` | `D13` | SPI 클록 |
+| `MOSI` | `D51` | `D11` | Arduino→무선 데이터 |
+| `MISO` | `D50` | `D12` | 무선→Arduino 데이터 |
+| `IRQ` | 연결 안 함 | 연결 안 함 | 현재 코드에서 미사용 |
+
+사진의 **HW-237형**과 같은 배치라면 본체의 **부품이 보이는 면을 위로**, **금색 안테나 커넥터를 오른쪽**, **2×4 헤더를 왼쪽**으로 두고 위에서 내려다봅니다. 이 방향에서 제조사 [상면 배치도 2쪽](https://www.sirius-pcb.com/download/YTozOntzOjY6Im9iamVjdCI7czo4OiJwcm9kdWN0cyI7czo5OiJmaWxlX3R5cGUiO3M6OToiMjIxNjYiO30%3D)의 핀 배열은 아래와 같습니다.
+
+```text
+부품면 ↑               금색 안테나 커넥터 →
+헤더 왼쪽       왼쪽 열    오른쪽 열
+맨 위            GND        VCC (3.3 V)
+                 CE         CSN
+                 SCK        MOSI
+맨 아래          MISO       IRQ
+```
+
+**납땜면에서 보면 좌우가 반대로 보입니다.** 실제 본체가 이 사진과 같은 HW-237형인지 제조사 그림과 실물을 대조하세요. 가장 쉬운 연결은 핀 이름이 적힌 **5 V 입력형 nRF24L01 소켓 어댑터**를 본체마다 하나씩 쓰는 것입니다. Mega `D53`과 Uno `D10`은 코드에서 SPI 마스터 출력으로 설정하지만 무선 본체에는 연결하지 않습니다. [RF24 Arduino 배선](https://github.com/nRF24/RF24/blob/master/docs/arduino.md)
+
+## 리모컨 Uno: 조이스틱 두 개
+
+| 조이스틱 핀 | 1번 조이스틱(주행) | 2번 조이스틱(로봇팔용 예비) |
 |---|---|---|
 | `GND` | Uno `GND` | Uno `GND` |
 | `5V` | Uno `5V` | Uno `5V` |
 | `VRx` | Uno `A0` | Uno `A2` |
 | `VRy` | Uno `A1` | Uno `A3` |
-| `SW` | Uno `D2` (선택) | Uno `D3` (선택) |
+| `SW` | Uno `D2` | Uno `D3` |
 
-두 `5V` 선과 두 `GND` 선은 각각 Uno의 같은 5 V·GND 전원선으로 나눠 연결합니다. 조이스틱 보드가 **5 V 입력형인지** 먼저 확인하세요. `VRx`는 좌우, `VRy`는 위아래 위치를 0~1023의 아날로그 값으로 읽습니다. 중앙은 대체로 약 512입니다. `SW`는 스틱을 아래로 누르는 버튼입니다. 이번 입력 확인 코드에서는 `INPUT_PULLUP`으로 읽어 **누르면 LOW**, 놓으면 HIGH입니다. [Arduino 아날로그 입력](https://docs.arduino.cc/tutorials/uno-rev3/AnalogReadSerial), [내부 풀업 입력](https://docs.arduino.cc/language-reference/en/variables/constants/inputOutputPullup/)
+두 `5V` 선과 두 `GND` 선을 각각 같은 전원에 나눠 연결합니다. 조이스틱 보드의 5 V 입력 사양을 확인하세요. `VRx`는 좌우, `VRy`는 위아래 위치를 0~1023으로 읽습니다. 중앙은 보통 약 512입니다. `SW`는 스틱을 아래로 누르는 버튼으로, `INPUT_PULLUP`에서는 누르면 `LOW`입니다. 현재 전체 주행 코드는 **1번 A0/A1만** 주행에 사용합니다. 2번과 두 버튼은 입력 실습에서만 확인합니다. [아날로그 입력](https://docs.arduino.cc/tutorials/uno-rev3/AnalogReadSerial), [풀업 입력](https://docs.arduino.cc/language-reference/en/variables/constants/inputOutputPullup/)
 
-`joystick_practice.ino`는 **두 조이스틱의 축과 버튼을 모두 표시**합니다. 현재 `controller_transmitter.ino`는 `USE_JOYSTICK=1`일 때 **1번의 A0/A1만 주행 명령으로 사용**하며, 버튼과 2번 조이스틱은 아직 주행·로봇팔 기능이 없습니다. 조이스틱 없이 시리얼로 조종할 때는 `USE_JOYSTICK=0`을 유지합니다.
+## 리모컨 Uno: KCD1 모드 스위치
+
+KCD1의 **한 위치에서 서로 도통되는 접점 두 개**를 전원 없이 멀티미터로 찾습니다. 한 접점은 Uno `D4`, 다른 접점은 Uno `GND`입니다. 코드에서 `D4`가 열려 `HIGH`이면 **조이스틱 모드**, 접점이 닫혀 `LOW`이면 **BMI270 기울기 모드**입니다. 표시등이 달린 3핀 제품이면 나머지 핀은 기판 사양을 확인할 때까지 비워 둡니다. **Uno D4에 5 V나 12 V를 직접 넣지 않습니다.** KCD1은 리모컨 전원을 끄는 선에 연결하지 않습니다. [KCD1 형식 예시](https://www.phaseda.com/switch/KCD1.htm)
+
+## 리모컨 Uno: BMI270
+
+BMI270은 가속도와 각속도를 측정합니다. 이번 기울기 모드는 **가속도 X/Y**로 전진·후진과 좌우 회전을 정합니다. Bosch 원칩의 VDD·VDDIO는 최대 3.6 V입니다. **기판 자체가 5 V 입력과 5 V I²C를 지원하는지**에 따라 배선이 달라집니다. [Bosch 데이터시트](https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi270-ds000.pdf)
+
+| BMI270 기판 표기 | Uno | 조건 |
+|---|---|---|
+| `SDA` | `A4/SDA` | 5 V I²C 호환 기판이면 직접 연결 |
+| `SCL` | `A5/SCL` | 5 V I²C 호환 기판이면 직접 연결 |
+| `GND` | `GND` | 공통 접지 |
+| `VIN`/`VCC` | `5V` 또는 `3.3V` | **기판 입력 사양에 따라** 선택; 원칩에 5 V 금지 |
+| `CS`/`CSB` | 기판 설명에 따라 I²C 선택 | 기판이 처리하면 추가 연결 불필요 |
+| `SDO`/`SA0` | 기판 설명에 따라 주소 선택 | 주소 `0x68` 또는 `0x69` |
+| `INT1`/`INT2` | 연결 안 함 | 현재 코드에서 미사용 |
+
+**3.3 V 전용 기판은 Uno A4/A5에 바로 연결하지 않습니다.** 5 V↔3.3 V 양방향 I²C 레벨 변환기를 사용합니다. 기판 모델명 없이 `VIN`의 허용 전압과 자체 신호 변환 여부를 확정할 수 없습니다. Uno의 I²C 핀은 [A4(SDA)와 A5(SCL)](https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf)입니다.

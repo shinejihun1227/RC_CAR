@@ -1,13 +1,15 @@
 // Arduino Uno: read two 5 V-compatible joystick modules without the radio.
 // Joystick 1: VRx=A0, VRy=A1, SW=D2. Joystick 2: VRx=A2, VRy=A3, SW=D3.
-// Both modules: VCC=5V, GND=GND. Switches are active LOW with INPUT_PULLUP.
+// Both modules: VCC=5V, GND=GND. KCD1 dry contact: D4 to GND when closed.
+// Joystick buttons and KCD1 are active LOW with INPUT_PULLUP.
 uint32_t lastPrintMs = 0;
 
 void setup() {
   Serial.begin(115200);
   pinMode(2, INPUT_PULLUP);
   pinMode(3, INPUT_PULLUP);
-  Serial.println(F("Joystick 1 A0/A1/D2; joystick 2 A2/A3/D3. Center near 512."));
+  pinMode(4, INPUT_PULLUP);
+  Serial.println(F("Joystick 1 A0/A1/D2; joystick 2 A2/A3/D3; KCD1 D4/GND."));
 }
 
 void loop() {
@@ -24,5 +26,7 @@ void loop() {
   Serial.print(F(" y="));
   Serial.print(analogRead(A3));
   Serial.print(F(" sw="));
-  Serial.println(digitalRead(3) == LOW ? F("PRESSED") : F("released"));
+  Serial.print(digitalRead(3) == LOW ? F("PRESSED") : F("released"));
+  Serial.print(F(" | mode="));
+  Serial.println(digitalRead(4) == LOW ? F("TILT") : F("JOYSTICK"));
 }

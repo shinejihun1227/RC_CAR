@@ -1,6 +1,7 @@
 // Arduino Mega 2560 + L298N: short, serial-triggered motor practice.
 // Connect 12 V ONLY after confirming both motors are rated for 12 V.
-// 5V-EN jumper ON; ENA/ENB jumpers OFF; Mega powered by USB.
+// With a 5 V buck: 5V-EN jumper OFF, buck OUT+ to L298N 5V.
+// ENA/ENB jumpers OFF; Mega powered by its own USB; grounds shared.
 
 const uint8_t PIN_ENA = 5;
 const uint8_t PIN_IN1 = 22;

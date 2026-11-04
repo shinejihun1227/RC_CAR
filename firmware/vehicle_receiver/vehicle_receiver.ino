@@ -1,6 +1,7 @@
 // Arduino Mega 2560: nRF24L01+ receiver, VL53L0X front stop, L298N 2WD drive.
-// Bench power: 12 V adapter to L298N, 5V-EN ON, ENA/ENB jumpers OFF,
-// Mega from USB, Mega GND joined to L298N GND. NEVER join their 5V pins here.
+// Bench power: 12 V adapter to L298N motor input and 5 V buck input.
+// 5V-EN OFF; buck 5V to L298N 5V; ENA/ENB jumpers OFF.
+// Mega from USB; Mega GND joined to L298N GND. Do not join their 5V pins.
 // Confirm 12 V motor rating and driver current before applying motor power.
 
 #include <SPI.h>

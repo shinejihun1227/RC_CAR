@@ -1,35 +1,35 @@
 # RC카 제작 실습
 
-차량은 Arduino Mega, 빨간 L298N, 37 mm 모터 두 개, VL53L0X 거리 센서로 구성합니다. 조종기에는 Arduino Uno와 nRF24L01 무선 모듈을 사용합니다. [원본 차체 모델](https://makerworld.com/ko/models/1342319-rc-rover-with-robot-arm-6-dof#profileId-1383072)을 바탕으로, 지금 가지고 있는 부품에 맞춰 배선과 코드를 정리했습니다.
+[원본 차체 모델](https://makerworld.com/ko/models/1342319-rc-rover-with-robot-arm-6-dof#profileId-1383072)을 바탕으로, 현재 가진 빨간 L298N·Arduino Mega 2560·Uno·37 mm 모터 두 개·nRF24L01+ PA/LNA 두 개·조이스틱 두 개·BMI270·KCD1·12 V 5 A 어댑터·LM2596에 맞춰 배선과 코드를 정리했습니다. 차량은 Mega가 무선 **수신**, 리모컨은 Uno가 **송신**합니다. 우선 바퀴 주행과 거리 센서 정지를 확인하고, 로봇팔 기능은 나중에 추가합니다.
 
-먼저 바퀴만 달린 차량 한 대를 완성합니다. 이후 같은 구성을 15대로 늘리고, 로봇팔을 달 차량 한 대는 별도로 확장할 계획입니다. 이 저장소에는 현재 **주행과 전방 거리 감지**까지 담겨 있습니다.
+## 먼저 읽을 문서
 
-## 실습 순서
+- [전체 핀 배선표](docs/wiring.md): L298N, 두 모터, 무선 8핀, 조이스틱 두 개, KCD1, BMI270, 거리 센서
+- [전원 연결](docs/power.md): 12 V 어댑터와 LM2596, 이후 3S 배터리 구성
+- [실습 순서](docs/practice.md): Mega·Uno에 단계별로 올릴 코드와 예상 결과
+- [제어 방식](docs/control.md): 조이스틱/기울기 모드, 거리 제한, 무선 끊김 정지
+- [부품과 수량](docs/parts.md): 차량 15대와 로봇팔 차량 1대 기준 수량
 
-1. [모터 코드](firmware/motor_practice/motor_practice.ino)를 Mega에 올려 바퀴 방향을 확인합니다.
-2. [거리 센서 코드](firmware/distance_practice/distance_practice.ino)를 Mega에 올려 거리값을 읽습니다.
-3. 무선 본체 두 개를 연결하고 [수신 코드](firmware/radio_receive_practice/radio_receive_practice.ino)는 Mega, [송신 코드](firmware/radio_send_practice/radio_send_practice.ino)는 Uno에 올려 통신만 확인합니다.
-4. 조이스틱이 있다면 [조이스틱 코드](firmware/joystick_practice/joystick_practice.ino)를 Uno에 올려 두 개의 축·버튼 값을 확인합니다.
-5. [차량 코드](firmware/vehicle_receiver/vehicle_receiver.ino)는 Mega, [조종기 코드](firmware/controller_transmitter/controller_transmitter.ino)는 Uno에 올려 주행과 장애물 정지를 확인합니다. 단계별 배선과 결과는 [실습 진행](docs/practice.md)에 적었습니다.
+## 실습에서 쓰는 코드
 
-조이스틱이 없어도 조종기 Uno의 시리얼 모니터에서 `w`(전진), `s`(후진), `a`·`d`(회전), `x`(정지)를 보낼 수 있습니다. 조이스틱으로 주행할 때는 조종기 코드의 `USE_JOYSTICK`을 `1`로 바꿉니다. 현재 전체 주행 코드는 1번 조이스틱만 사용하고, 2번은 입력 확인 실습에서만 읽습니다.
+| 실습 | Mega | Uno |
+|---|---|---|
+| 모터 | [motor_practice](firmware/motor_practice/motor_practice.ino) | 없음 |
+| 거리 센서 | [distance_practice](firmware/distance_practice/distance_practice.ino) | 없음 |
+| 무선 통신 | [radio_receive_practice](firmware/radio_receive_practice/radio_receive_practice.ino) | [radio_send_practice](firmware/radio_send_practice/radio_send_practice.ino) |
+| 조이스틱·KCD1 | 없음 | [joystick_practice](firmware/joystick_practice/joystick_practice.ino) |
+| BMI270 칩 확인 | 없음 | [bmi270_probe_practice](firmware/bmi270_probe_practice/bmi270_probe_practice.ino) |
+| BMI270 움직임 | 없음 | [bmi270_motion_practice](firmware/bmi270_motion_practice/bmi270_motion_practice.ino) |
+| 전체 주행 | [vehicle_receiver](firmware/vehicle_receiver/vehicle_receiver.ino) | [controller_transmitter](firmware/controller_transmitter/controller_transmitter.ino) |
 
-## 필요한 문서
+Arduino IDE에 **RF24**, **VL53L0X (Pololu)**, **[NiusIMU 0.4.1](https://github.com/dunknowcoding/ArduinoNRF-IMU/tree/v0.4.1)** 라이브러리를 설치합니다. NiusIMU는 GitHub ZIP을 내려받아 Arduino IDE의 `.ZIP 라이브러리 추가`로 설치할 수 있습니다. 일반 SparkFun BMI270 라이브러리 예제는 Uno의 SRAM 한도를 넘어서 이 코드에는 쓰지 않습니다.
 
-- [부품과 수량](docs/parts.md): 차량 한 대를 만들 때와 16대로 늘릴 때 필요한 수량
-- [배선표](docs/wiring.md): 각 단자와 Arduino 핀의 연결
-- [전원 연결](docs/power.md): 지금 쓰는 12 V 어댑터와 향후 3S 배터리 구성
-- [제어 방식](docs/control.md): 조종 명령, 좌우 바퀴 속도, 거리 감지, 무선 끊김 처리
-- [실습 진행](docs/practice.md): 코드를 올리는 순서와 확인할 결과
+## 전원과 주행에서 꼭 맞출 것
 
-## 시작 전 확인
+책상 실습에서는 12 V 어댑터를 L298N `12V/GND`와 LM2596 입력에 나눠 연결합니다. LM2596 출력을 **연결 전에 멀티미터로 5.0 V**에 맞춰 L298N `5V/GND`에 넣습니다. 이 구성에서는 L298N **`5V-EN` 캡을 빼고**, `ENA`·`ENB` 캡도 뺍니다. Mega와 Uno는 각각 USB로 켭니다. Mega `GND`와 L298N `GND`만 공유하고 두 보드의 `5V`는 연결하지 않습니다. 모터가 12 V 정격이고 스톨 전류가 L298N에 맞는지 먼저 확인합니다.
 
-12 V 5 A 어댑터는 **모터가 12 V 정격일 때** 연결합니다. 모터의 스톨 전류도 L298N 채널 허용 범위와 비교해야 합니다. 거리 센서 기판이 5 V 입력을 받는지, 무선 모듈용 3.3 V 소켓 어댑터가 실제로 들어 있는지도 확인해 주세요. 상품 사진만으로는 어댑터 포함 수량을 알 수 없습니다.
+무선 본체에는 5 V를 직접 넣지 않습니다. 5 V 입력·3.3 V 출력 소켓 어댑터가 각 무선 본체에 한 개씩 필요합니다. BMI270 기판은 **5 V 입력·I²C 호환 여부를 확인**해야 합니다. 3.3 V 전용 기판이라면 Uno와 사이에 양방향 I²C 레벨 변환기를 넣습니다. KCD1은 Uno `D4/GND`의 **모드 선택 접점**으로 사용합니다. 열린 위치는 조이스틱, 닫힌 위치는 BMI270 기울기 조종입니다.
 
-책상 위 실습에서는 Mega와 Uno를 USB로 켜고, 12 V 어댑터는 L298N에만 연결합니다. **L298N의 `5V-EN` 캡은 끼우고 `ENA`·`ENB` 캡은 뺍니다.** 이 상태에서 Mega `5V`와 L298N `5V`는 연결하지 않습니다. 원본 부품표의 **LM2596는 강압(벅) 모듈**이며, 3S 배터리를 차량에 실을 때 5 V 전원을 만드는 데 씁니다. 3S 구성에서는 `5V-EN`을 빼고 [전원 연결](docs/power.md)의 배선표를 따릅니다.
+## 코드 검수 기록
 
-## 코드 확인 기록
-
-2026-11-03에 Mega용 스케치 네 개와 Uno용 스케치 세 개를 컴파일했습니다. Uno 전체 송신기는 시리얼 입력과 조이스틱 입력 설정을 각각 확인했습니다. 사용한 환경은 `arduino-cli 1.2.0`, `arduino:avr 1.8.6`, RF24 `f026bea`, Pololu VL53L0X `9f3773c`입니다. 실제 모터 방향과 센서 동작은 실물 배선 후 확인해야 합니다.
-
-Arduino IDE의 라이브러리 관리자에서 **RF24**와 **VL53L0X (Pololu)**를 설치하면 됩니다. `SPI`와 `Wire`는 Arduino 기본 라이브러리입니다.
+2026-11-04에 Mega·Uno 스케치를 컴파일했습니다. NiusIMU 0.4.1(`8756bc1`)을 사용한 Uno 전체 송신기는 **프로그램 25,672 B(79%)·전역 메모리 833 B(40%)**로 컴파일됐습니다. SparkFun BMI270 기본 예제는 전역 메모리 **8,992 B**로 Uno의 2,048 B 한도를 넘었습니다. 최종 차량 코드는 거리 센서가 없거나 값을 못 읽으면 전진을 막고, 무선 명령이 끊기면 정지합니다. 최종 리모컨 코드는 KCD1 모드를 바꿀 때 명령을 0으로 만들고, BMI270 오류가 나면 기울기 모드에서 0을 보냅니다. 실제 배선·전압·모터 방향·센서 방향·무선 연결은 아직 실물로 검증해야 합니다.
