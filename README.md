@@ -1,5 +1,7 @@
 # RC카 제작 실습
 
+**현재 조립 상태(스위치·BMI270 없이 조이스틱으로 주행)**는 [지금 연결한 부품으로 주행 실습](docs/now-drive-practice.md)부터 진행하세요. 아래의 기존 전원 설명은 다른 배선 방식입니다.
+
 [원본 차체 모델](https://makerworld.com/ko/models/1342319-rc-rover-with-robot-arm-6-dof#profileId-1383072)을 바탕으로, 현재 가진 빨간 L298N·Arduino Mega 2560·Uno·37 mm 모터 두 개·nRF24L01+ PA/LNA 두 개·조이스틱 두 개·BMI270·KCD1·12 V 5 A 어댑터·LM2596에 맞춰 배선과 코드를 정리했습니다. 차량은 Mega가 무선 **수신**, 리모컨은 Uno가 **송신**합니다. 우선 바퀴 주행과 거리 센서 정지를 확인하고, 로봇팔 기능은 나중에 추가합니다.
 
 ## 먼저 읽을 문서
