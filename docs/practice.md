@@ -1,5 +1,7 @@
 # 실습 순서와 업로드할 코드
 
+> 아래는 이전 실습 순서입니다. 현재 v0~v4 구성은 [v0~v4 실습 안내](v0-v4-practice.md)를 기준으로 진행하세요.
+
 차량은 **Arduino Mega 2560**, 리모컨은 **Arduino Uno**로 Arduino IDE에서 선택합니다. 시리얼 모니터는 모두 **115200 bps**입니다. `.ino` 파일은 같은 이름의 폴더째 엽니다. 코드 업로드 때는 Mega·Uno를 각각 PC USB로 켭니다. [전체 핀 배선표](wiring.md)와 [12 V·LM2596 전원 연결](power.md)을 먼저 봅니다.
 
 라이브러리 관리자에서 **RF24**와 **VL53L0X (Pololu)**를 설치합니다. BMI270 기울기 실습과 최종 Uno 송신기에는 **[NiusIMU 0.4.1](https://github.com/dunknowcoding/ArduinoNRF-IMU/tree/v0.4.1)**이 필요합니다. GitHub의 `Code → Download ZIP`으로 내려받아 Arduino IDE `스케치 → 라이브러리 포함하기 → .ZIP 라이브러리 추가`에서 설치할 수 있습니다. `SPI`와 `Wire`는 Arduino 기본 라이브러리입니다. 일반 SparkFun BMI270 라이브러리의 기본 예제는 Uno의 SRAM 2 KB를 초과했으므로 이 저장소의 Uno 코드에는 사용하지 않습니다.
