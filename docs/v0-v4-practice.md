@@ -1,4 +1,4 @@
-# RC카 v0~v4 실습 순서
+# RC카 Ready·v0~v4 실습 순서
 
 차량은 Mega 2560, 조종기는 Uno다. 각 버전 폴더의 `.ino`를 Arduino IDE에서 열어 보드와 포트를 선택해 올린다. Mega와 Uno에는 각각 해당 버전의 파일을 올린다. 시리얼 모니터 속도는 모두 **115200 baud**다. 처음에는 바퀴를 공중에 띄운다.
 
@@ -27,6 +27,7 @@ L298N의 `ENA`·`ENB` 점퍼를 빼고 PWM 선을 연결한다. `5V-EN`은 별�
 
 | 버전 | 업로드 파일 | 실행·통과 기준 |
 |---|---|---|
+| **Ready** 모터+거리 | Mega [`ready.ino`](../firmware/ready/ready.ino) | **v0 앞의 통합 시연**. 바퀴를 띄우고 센서 전방에 30cm보다 먼 물체를 둔다. 왼쪽 전진 2초 → 정지 0.4초 → 왼쪽 후진 2초 → 정지 → 오른쪽 전진 2초 → 정지 → 오른쪽 후진 2초 → 정지를 반복한다. 30cm 이하에서는 두 모터 모두 멈추고, 30cm를 넘으면 멈춘 단계부터 이어진다. 센서 오류 때도 정지한다. |
 | **v0** 모터 | Mega [`vehicle_mega.ino`](../firmware/v0/vehicle_mega/vehicle_mega.ino) | 12V 모터 정격을 확인하고 바퀴를 띄운다. RESET 뒤 약 2초 후 왼쪽 전진 → 오른쪽 전진 → 양쪽 전진 → 양쪽 후진을 각 0.5초씩 **한 번** 실행한다. 두 바퀴가 모두 돌아야 통과한다. 반대 방향이면 `LEFT_INVERT`/`RIGHT_INVERT`를 바꾼다. `TEST_PWM=200`은 현재 진단값이며 모터 사양에 맞춰 조정한다. |
 | **v1** 거리+모터 | Mega [`vehicle_mega.ino`](../firmware/v1/vehicle_mega/vehicle_mega.ino) | Mega 시리얼 모니터에서 `distance_mm`이 물체 이동에 따라 바뀌는지 본다. `w` 전진, `s` 후진, `a` 좌회전, `d` 우회전, `x` 정지. `w/s/a/d`는 v0의 최대 PWM으로 짧게 시험하고, 명령은 700ms 후 자동 정지한다. 30cm 이내에서 `blocked=YES`가 되고 전진/제자리 회전은 멈추며 후진만 가능해야 한다. 40cm 이상에서 해제된다. 센서 오류도 전진을 막는다. |
 | **v2** 무선 시리얼 조종 | Mega [`vehicle_mega.ino`](../firmware/v2/vehicle_mega/vehicle_mega.ino), Uno [`controller_uno.ino`](../firmware/v2/controller_uno/controller_uno.ino) | 두 보드에 업로드하고 무선 전원을 확인한다. Uno 시리얼 모니터에서 `ACK=YES`를 확인한 뒤 `w/s/a/d/x`를 보낸다. `w/s/a/d`는 차량 코드의 최대 PWM으로 짧게 시험한다. 명령은 700ms 후 중립으로 돌아가고, 무선 패킷이 끊기면 차량은 약 250ms 후 정지한다. v1의 거리 제한도 유지된다. |
@@ -45,6 +46,7 @@ L298N의 `ENA`·`ENB` 점퍼를 빼고 PWM 선을 연결한다. `5V-EN`은 별�
 
 ## 설치 라이브러리와 전원 분리
 
-v1~v4 Mega에는 Arduino IDE 라이브러리 관리자에서 **VL53L0X (Pololu)**를 설치한다. v2~v4 양쪽 보드에는 **RF24 (TMRh20/nRF24)**가 필요하다. v4 Uno에는 [NiusIMU 0.4.1](https://github.com/dunknowcoding/ArduinoNRF-IMU/tree/v0.4.1)을 ZIP 라이브러리로 설치한다. 일반적인 SparkFun BMI270 라이브러리는 기존 Uno 빌드에서 RAM 한도를 넘어서 이 실습의 v4에는 쓰지 않았다.
+Ready와 v1~v4 Mega에는 Arduino IDE 라이브러리 관리자에서 **VL53L0X (Pololu)**를 설치한다. v2~v4 양쪽 보드에는 **RF24 (TMRh20/nRF24)**가 필요하다. v4 Uno에는 [NiusIMU 0.4.1](https://github.com/dunknowcoding/ArduinoNRF-IMU/tree/v0.4.1)을 ZIP 라이브러리로 설치한다. 일반적인 SparkFun BMI270 라이브러리는 기존 Uno 빌드에서 RAM 한도를 넘어서 이 실습의 v4에는 쓰지 않았다.
 
 v2~v4를 차량 USB 없이 실행하려면 Mega에 안정된 별도 5V 공급이 필요하다. 현재의 `L298N 5V→Mega 5V` 방식은 모터 기동 때 전압이 떨어지지 않는지 실물에서 확인해야 한다. **Mega 5V 핀으로 전원을 넣을 때 USB와 동시에 공급하지 않는다.** 5V를 Mega `VIN`에 넣는 방식은 사용하지 않는다. 차와 조종기 사이에는 전원선이나 GND선을 잇지 않는다.
+
