@@ -136,13 +136,20 @@ void loop() {
     lastBlocked = blocked;
     lastPrintedStep = stepIndex;
   }
-  if (now - lastReportMs >= 500) {
+  // Arduino IDE Serial Monitor: 115200 baud. Print a live reading every 0.2 s.
+  if (now - lastReportMs >= 200) {
     lastReportMs = now;
-    Serial.print(F("distance_mm="));
-    if (distanceValid) Serial.print(distanceMm);
-    else Serial.print(F("INVALID"));
-    Serial.print(F("  blocked="));
-    Serial.println(blocked ? F("YES") : F("NO"));
+    Serial.print(F("Distance: "));
+    if (distanceValid) {
+      Serial.print(distanceMm / 10);
+      Serial.print('.');
+      Serial.print(distanceMm % 10);
+      Serial.print(F(" cm"));
+    } else {
+      Serial.print(F("SENSOR ERROR"));
+    }
+    Serial.print(F(" | Motor: "));
+    Serial.println(blocked ? F("STOP") : F("RUN"));
   }
 }
 
